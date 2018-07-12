@@ -1,0 +1,64 @@
+#appmenu {
+	width:80%;
+	float: left;
+	margin: 0;
+	padding: 0;
+	color: #fff;
+	background-color: #369;
+	padding: .25em;
+}
+
+#appmenu li {
+	display:block;
+}
+
+#appmenu [role="menuitem"] {	
+	padding: 10px 20px;
+	color: #fff;
+	width: 100px;
+	background-color: #036;
+	cursor: pointer;
+}
+
+#appmenu [role="menuitem"]:focus,
+#appmenu [role="menuitem"]:hover {	
+	background-color: #fff;
+	color: #036;
+	border: 3px solid #036;
+}
+
+#appmenu > li {
+	float: left;
+	text-align: center;
+	position: relative;
+}
+
+#appmenu:hover,
+#appmenu:focus {
+	background-color: #fff;
+	color: #036;
+	border: 1px solid #036;
+	text-decoration: underline;
+}
+
+#appmenu:hover li,
+#appmenu:focus li  {
+	color: #fff;
+	background-color: #036;
+}
+
+#appmenu [aria-haspopup="true"] + [role="menu"] {
+	display: none;
+	position:absolute;
+	left:0;
+	right:0;
+	top:100%;
+	padding:0;
+	margin:0;
+	background-color: #036;
+	text-align: left;
+}
+
+#appmenu [aria-haspopup="true"][aria-expanded="true"] + [role="menu"] {
+	display:block;
+}

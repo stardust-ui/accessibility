@@ -1,0 +1,102 @@
+<style>
+  button {
+    background-color: #ccc;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+</style>
+
+<ul>
+  <li>
+    <div>Text in a div not focusable</div>
+  </li>
+  <li>
+    <span>Text in a span not focusable</span>
+  </li>
+  <li>
+    <div tabindex="0">Text in a div focusable. Facebook messenger has its messages in thread with tabindex="0"</div>
+  </li>
+  <li>
+    <span tabindex="0">Text in a span focusable. Facebook messenger has its messages in thread with tabindex="0"</span>
+  </li>
+  <li>
+    <a href="#">Anchor tag only with text content. Focusable.</a>
+  </li>
+  <li>
+    <a href="#">
+      <img role="presentation" src="/img/icons-activity.png" title="anchor tag with image. anchor as a whole should be focusable."
+      />
+    </a>
+  </li>
+  <li>
+    <a href="#">
+      <img role="presentation" src="/img/icons-activity.png" />
+      <span>Anchor tag with image and text. Anchor tag as a whole should receive focus.</span>
+    </a>
+  </li>
+  <li>
+    <div>
+      <a href="#">
+        <img role="presentation" src="/img/icons-activity.png" />
+        <span>Div with anchor tag with image and text. Anchor tag as a whole should receive focus.</span>
+      </a>
+    </div>
+  </li>
+  <li>
+    <button>Button with a text. should receive focus.</button>
+  </li>
+  <li>
+    <button>
+      <img src="/img/icons-activity.png" title="button with an image, button should get focus" />
+    </button>
+  </li>
+  <li>
+    <div>
+      <a href="#">
+        <span>Complex div with button and link. Both of them should receive focus, first anchor then button.</span>
+      </a>
+      <button>
+        <img src="/img/icons-dots-white.png" title="button with an image, button should get focus" />
+      </button>
+    </div>
+  </li>
+  <li>
+    <div style="display: flex; flex-direction: row-reverse">
+      <button style>
+        <img src="/img/icons-dots-white.png" title="button with an image, button should get focus" />
+      </button>
+      <a href="#">
+        <span>Same as above but with flex direction reversed. Found this example in facebook. Focus seems wrong but actually is
+          based on html syntax.</span>
+      </a>
+    </div>
+  </li>
+  <li>
+    <div>
+      <a style="display: block" href="#">Complex div that can resemble a message/post in a thread.</a>
+      <button style>
+        <img src="/img/icons-compose-1.png" />
+      </button>
+      <button style>
+        <img src="/img/icons-compose-2.png" />
+      </button>
+      <button style>
+        <img src="/img/icons-compose-3.png" />
+      </button>
+      <a style="display: block" href="#">In angular client we focus on posts rather than post elements. We focus on post elements only after hitting enter while
+        on post.</a>
+      <button style>
+        <img src="/img/icons-compose-4.png" />
+      </button>
+      <button style>
+        <img src="/img/icons-compose-5.png" />
+      </button>
+      <button style>
+        <img src="/img/icons-compose-6.png" />
+      </button>
+      <a style="display: block" href="#">Facebook handles this without post focus, just natural focus on focusable elements. This example is meant to be like
+        that.
+      </a>
+    </div>
+  </li>
+</ul>
