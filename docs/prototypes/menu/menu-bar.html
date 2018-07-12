@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Buttons</title>
+	<link rel="stylesheet" href="menu-bar.css">
+</head>
+
+<body>
+	<h2>Menu</h2>
+	<h3>Menu Bar</h3>
+	<ul role="menubar" aria-label="Settings" id="appmenu">
+		<li>
+			<button role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="File settings" tabindex="0">
+				File
+			</button>
+			<ul role="menu" aria-label="File">
+				<li role="presentation">
+					<button role="menuitem" aria-label="Create new file" tabindex="-1">New</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" aria-label="Open file" tabindex="-1">Open</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" aria-label="Print file" tabindex="-1">Print</button>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<button role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="Edit actions" tabindex="-1">
+				Edit
+			</button>
+			<ul role="menu" aria-label="Edit">
+				<li role="presentation">
+					<button role="menuitem" aria-label="Undo action" tabindex="-1">Undo</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" aria-label="Redo action" tabindex="-1">Redo</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" tabindex="-1">Cut</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" tabindex="-1">Copy</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" tabindex="-1">Paste</button>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<button role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="Format text" tabindex="-1">
+				Format
+			</button>
+			<ul role="menu" aria-label="Format">
+				<li role="presentation">
+					<button role="menuitem" tabindex="-1">Font</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" tabindex="-1">Text</button>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<button role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="View settings" tabindex="-1">
+				View
+			</button>
+			<ul role="menu" aria-label="View">
+				<li role="presentation">
+					<button role="menuitem" tabindex="-1">100%</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" tabindex="-1">Zoom In</button>
+				</li>
+				<li role="presentation">
+					<button role="menuitem" tabindex="-1">Zoom Out</button>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<button role="menuitem" aria-label="Help" tabindex="-1">
+				Help
+			</button>
+		</li>
+	</ul>
+	<script src="menu-bar.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Buttons</title>
+	<link rel="stylesheet" href="menu-bar.css">
+</head>
+
+<body>
+	<h2>Menu</h2>
+	<h3>Menu Bar with div children</h3>
+	<p>
+		Menu bar with submenu. User can use TAB to navigate to the menu and arrow keys to navigate around the menu. Enter and space
+		open submenu or execute action. Esc closes the submenu.
+	</p>
+	<p>
+		With screen reader, user needs to be able to navigate to and inside of the menu using virtual cursor. Screen reader reads
+		the aria label of the selected menu item
+	</p>
+	<p>
+		Compared to the ARIA pattern, it uses div element as a child of the li (instead of button) - the reason is that button has
+		children restrictions.
+	</p>
+	<p>
+		<strong>Known issues:</strong>
+		<ul>
+			<li>up/down key execute action when not on menu with submenuperformClick</li>
+		</ul>
+	</p>
+
+	<ul role="menubar" aria-label="Settings" id="appmenu">
+		<li role="presentation">
+			<div role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="File settings" tabindex="0">
+				File
+			</div>
+			<ul role="menu" aria-label="File">
+				<li role="presentation">
+					<div role="menuitem" aria-label="Create new file" tabindex="-1">New</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" aria-label="Open file" tabindex="-1">Open</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" aria-label="Print file" tabindex="-1">Print</div>
+				</li>
+			</ul>
+		</li>
+		<li role="presentation">
+			<div role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="Edit actions" tabindex="-1">
+				Edit
+			</div>
+			<ul role="menu" aria-label="Edit">
+				<li role="presentation">
+					<div role="menuitem" aria-label="Undo action" tabindex="-1">Undo</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" aria-label="Redo action" tabindex="-1">Redo</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" tabindex="-1">Cut</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" tabindex="-1">Copy</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" tabindex="-1">Paste</div>
+				</li>
+			</ul>
+		</li>
+		<li role="presentation">
+			<div role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="Format text" tabindex="-1">
+				Format
+			</div>
+			<ul role="menu" aria-label="Format">
+				<li role="presentation">
+					<div role="menuitem" tabindex="-1">Font</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" tabindex="-1">Text</div>
+				</li>
+			</ul>
+		</li>
+		<li role="presentation">
+			<div role="menuitem" aria-haspopup="true" aria-expanded="false" aria-label="View settings" tabindex="-1">
+				View
+			</div>
+			<ul role="menu" aria-label="View">
+				<li role="presentation">
+					<div role="menuitem" tabindex="-1">100%</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" tabindex="-1">Zoom In</div>
+				</li>
+				<li role="presentation">
+					<div role="menuitem" tabindex="-1">Zoom Out</div>
+				</li>
+			</ul>
+		</li>
+		<li role="presentation">
+			<div role="menuitem" aria-label="Help" tabindex="-1">
+				Help
+			</div>
+		</li>
+	</ul>
+	<script src="menu-bar.js"></script>
+</body>
+
+</html>

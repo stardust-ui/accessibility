@@ -1,0 +1,31 @@
+.info-card-container {
+  display: flex;
+}
+
+.info-card-right-title,
+.info-card-right-msg {
+  display: block;
+}
+
+.info-card-right-msg {
+  font-size: 14px;
+  font-style: italic;
+}
+
+li {
+  list-style-type: none;
+}
+
+li[aria-selected="true"] {
+  background-color: pink;
+}
+
+li:focus, li:hover {
+  outline: none;
+  background-color: purple;
+}
+
+img {
+  height: 100%;
+  width: 100%;
+}
