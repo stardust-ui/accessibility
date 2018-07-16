@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Input with button</title>
+	<link rel="stylesheet" href="input.css">
+</head>
+
+<body>
+
+    <h2>&ltinput&gt element</h2>
+    <h3> Input + clear button </h3>
+    <div class="clear-input-container">
+        <input placeholder="Type in input" type="text" />
+        <button class="clear-btn" aria-label="Clear input">X</button>
+    </div>
+
+    <h3> Input required, maxlength="10" + button </h3>
+    <div class="input-container">
+            <input required min="2" maxlength="10" placeholder="Type in input" type="text"/>
+            <button aria-label="Submit input field">Submit</button>
+    </div>
+
+    <h3> Input type="number", min="2", max="5" </h3>
+    <div class="input-container">
+            <input min="2" max="5" maxlength="10" placeholder="Type in input" type="number"/>
+            <button aria-label="Submit input field">Submit</button>
+    </div>
+
+    <h3> Input readonly </h3>
+    <div class="input-container">
+            <input readonly placeholder="Type in input" type="text" value="I am readonly field"/>
+    </div>
+
+    <h3> Input disabled + button </h3>
+    <div class="input-container">
+            <input disabled placeholder="Type in input" type="text" />
+            <button aria-label="Submit input field">Submit</button>
+    </div>
+
+    <h3> Input type="email" + button </h3>
+    <div class="input-container">
+        <input placeholder="Enter your email" type="email" name="email" />
+        <button aria-label="Submit input field">Submit</button>
+    </div>
+
+    <h3> Input type="tel" + button</h3>
+    <div class="input-container">
+        <input placeholder="Enter your phone number" type="tel" />
+        <button aria-label="Submit input field">Submit</button>
+    </div>
+
+    <h3> Input type="date" + button, aria-label="Enter your birthday". Placeholder wouldn't be read for this type</h3>
+    <div class="input-container">
+        <input placeholder="Enter your birthday" aria-label="Enter your birthday" type="date" />
+        <button aria-label="Submit input field">Submit</button>
+    </div>
+    
+    <h3> Label + Input + button </h3>
+    <div class="input-container">
+        <label for="fname" aria-hidden="true">First name:</label>
+        <input id="fname"placeholder="Type your name" type="text" />
+        <button aria-label="Submit input field">Submit</button>
+    </div>
+
+    <h3> Form + Label + Input + button </h3>
+    <div class="input-container">
+        <form>
+            <label for="fname" aria-hidden="true">First name:</label>
+            <input id="fname" name="fname" placeholder="Type your name" type="text" />
+            <button aria-label="Submit input field">Submit</button>
+        </form>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    
+    <h2>&lttextarea&gt element</h2>
+    <h3> Textarea + button </h3>
+    <div class="textarea-container">
+        <textarea rows="4" cols="50" placeholder="Type in textarea"></textarea>
+        <button aria-label="Submit textarea">Submit</button>
+    </div>
+
+
+    <h3> Label + Textarea + button </h3>
+    <div class="textarea-container">
+        <label for="bio" aria-hidden="true">Your bio:</label>
+        <textarea id="bio" placeholder="Type in textarea"></textarea>
+        <button aria-label="Submit textarea">Submit</button>
+    </div>
+
+
+    <h3> Form + label + textarea + button </h3>
+    <div class="textarea-container">
+        <form>
+            <label for="bio" aria-hidden="true">Your bio:</label>
+            <textarea placeholder="Type in textarea"></textarea>
+            <button aria-label="Submit textarea">Submit</button>
+        </form>
+    </div>
+
+    <script src="input.js"></script>
+</body>
+</html>
