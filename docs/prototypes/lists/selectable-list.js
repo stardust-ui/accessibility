@@ -9,79 +9,81 @@ const keys = {
   down: 40
 };
 
-const listItems = document.getElementsByTagName("li");
-let selectedIndex = 0;
-let kbFocusIndex = 0;
+function SelectableList(node) {
 
-function applySelection(index) {
-  if (index >= listItems.length || index < 0) {
+  this.listItems = node.getElementsByTagName("li");
+}
+
+SelectableList.prototype.init = function() {
+  this.selectedIndex = 0;
+  this.kbFocusIndex = 0;
+
+  for (let index = 0; index < this.listItems.length; index++) {
+    const item = this.listItems.item(index);
+    if (index === 0) {
+      item.setAttribute("tabindex", "0");
+    } else {
+      item.setAttribute("tabindex", "-1");
+    }
+  
+    item.setAttribute("aria-selected", false);
+    item.setAttribute("aria-setsize", this.listItems.length);
+    item.setAttribute("aria-posinset", index + 1);
+    item.addEventListener("click", event => {
+      this.applySelection(this.getIndexInList(event.target));
+    });
+  
+    // When navigate using Screen Reader shortcuts, we have to handle indexes based on focus event
+    item.addEventListener('focus', event => {
+      this.listItems[this.kbFocusIndex].setAttribute("tabindex", "-1");
+      var currIndex = this.getIndexInList(event.target);
+      this.kbFocusIndex = currIndex;
+      this.listItems[this.kbFocusIndex].setAttribute("tabindex", "0");
+    });
+    item.addEventListener("keydown", event => {
+      switch (event.keyCode) {
+        case keys.down:
+          this.applyKbFocus(this.kbFocusIndex + 1);
+          break;
+        case keys.up:
+          this.applyKbFocus(this.kbFocusIndex - 1);
+          break;
+        case keys.enter:
+        case keys.space:
+          this.applySelection(this.kbFocusIndex);
+          break;
+      }
+    });
+  }
+}
+
+
+
+SelectableList.prototype.applySelection = function(index) {
+  if (index >= this.listItems.length || index < 0) {
     return;
   }
-  kbFocusIndex = index;
-  listItems[selectedIndex].setAttribute("tabindex", "-1");
-  listItems[selectedIndex].removeAttribute("aria-selected");
-  selectedIndex = index;
-  listItems[selectedIndex].focus();
-  listItems[selectedIndex].setAttribute("tabindex", "0");
-  listItems[selectedIndex].setAttribute("aria-selected", "true");
+  this.kbFocusIndex = index;
+  this.listItems[this.selectedIndex].setAttribute("tabindex", "-1");
+  this.listItems[this.selectedIndex].setAttribute("aria-selected", false);
+  this.selectedIndex = index;
+  this.listItems[this.selectedIndex].focus();
+  this.listItems[this.selectedIndex].setAttribute("tabindex", "0");
+  this.listItems[this.selectedIndex].setAttribute("aria-selected", "true");
 
-  window.alert(`${
-    listItems[selectedIndex]
-      .getElementsByClassName("info-card-right-title")
-      .item(0).textContent
-  }
-    says
-    ${
-      listItems[selectedIndex]
-        .getElementsByClassName("info-card-right-msg")
-        .item(0).textContent
-    }`);
+  window.alert(this.listItems[this.selectedIndex]
+    .getElementsByClassName("info-card-right-title")
+    .item(0).textContent + ' says ' + this.listItems[this.selectedIndex].getElementsByClassName("info-card-right-msg").item(0).textContent);
 }
 
-function applyKbFocus(index) {
-  if (index >= listItems.length || index < 0) {
+SelectableList.prototype.applyKbFocus = function(index) {
+  if (index >= this.listItems.length || index < 0) {
     return;
   }
-  listItems[kbFocusIndex].setAttribute("tabindex", "-1");
-  kbFocusIndex = index;
-  listItems[kbFocusIndex].focus();
-  listItems[kbFocusIndex].setAttribute("tabindex", "0");
+  this.listItems[index].focus();
 }
 
-function getIndexInList(child) {
-  return $(child)
-    .closest("li")
-    .index();
-}
-
-for (let index = 0; index < listItems.length; index++) {
-  const item = listItems.item(index);
-  if (index === 0) {
-    item.setAttribute("tabindex", "0");
-  } else {
-    item.setAttribute("tabindex", "-1");
-  }
-  item.setAttribute("aria-setsize", listItems.length);
-  item.setAttribute("aria-posinset", index + 1);
-  item.addEventListener("click", event => {
-    applySelection(getIndexInList(event.target));
-  });
-  item.addEventListener("keydown", event => {
-    switch (event.keyCode) {
-      case keys.down:
-        applyKbFocus(kbFocusIndex + 1);
-        break;
-      case keys.up:
-        applyKbFocus(kbFocusIndex - 1);
-        break;
-      case keys.enter:
-      case keys.space:
-        applySelection(kbFocusIndex);
-        break;
-      default:
-        break;
-    }
-    if (event.shiftKey) {
-    }
-  });
+SelectableList.prototype.getIndexInList = function(child) {
+  var listItemsArray = [].slice.apply(this.listItems);
+  return listItemsArray.indexOf(child.nodeName === 'LI' ? child : child.parentElement);
 }

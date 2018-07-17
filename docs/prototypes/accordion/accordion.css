@@ -1,0 +1,54 @@
+.accordion-container {
+  width: 400px;
+}
+
+.listbox {
+    display: none;
+    padding-left: 0;
+}
+
+.listbox li {
+  margin: 10px 0;
+}
+
+.listbox .info-card-left {
+  min-width: 45px;
+}
+
+[aria-expanded="true"] + .listbox {
+  display: block;
+}
+
+svg {
+  height: 2.2rem;
+  width: 2.2rem;
+}
+
+.triangle-down {
+  display: inline;
+}
+
+.triangle-right {
+  display: none;
+}
+
+[aria-expanded="true"] .triangle-down {
+  display: none;
+}
+
+[aria-expanded="true"] .triangle-right {
+  display: inline;
+}
+
+.expand-btn {
+  background-color: rgb(175, 223, 137);
+  padding: 10px 20px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.expand-btn span {
+  line-height: 35px;
+  vertical-align: top;
+  font-size: 14px;
+}
