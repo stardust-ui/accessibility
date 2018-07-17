@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Selectable dropdown</title>
+  <link rel="stylesheet" href="menu-button.css">
+</head>
+
+<a href="#">Just for the sake of focus</a>
+<div class="menu_button">
+  <button id="menubutton" aria-haspopup="true" aria-controls="menu2">
+
+    WAI-ARIA Quick Links
+
+  </button>
+  <ul id="menu2" role="menu" aria-labelledby="menubutton">
+    <li role="none">
+      <button role="menuitem">
+
+        W3C Home Page
+
+      </button>
+    </li>
+    <li role="none">
+      <button role="menuitem">
+
+        W3C Web Accessibility Initiative
+
+      </button>
+    </li>
+    <li role="none">
+      <button role="menuitem">
+
+        Accessible Rich Internet Application Specification
+
+      </button>
+    </li>
+    <li role="none">
+      <button role="menuitem">
+
+        WAI-ARIA Authoring Practices
+
+      </button>
+    </li>
+    <li role="none">
+      <button role="menuitem">
+
+        WAI-ARIA Implementation Guide
+
+      </button>
+    </li>
+    <li role="none">
+      <button role="menuitem">
+
+        Accessible Name and Description
+
+      </button>
+    </li>
+  </ul>
+</div>
+<a href="#">Just for the sake of focus</a>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="menu-button.js"></script>
+<script src="menu-item-links.js"></script>
+<script src="popup-menu.js"></script>
+<script type="text/javascript">
+  window.onload = function () {
+    var menubutton = new Menubutton(document.getElementById('menubutton'), 'button');
+    menubutton.init();
+  }
+</script>
+
+</html>

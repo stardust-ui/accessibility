@@ -11,6 +11,7 @@ They will mostly be based on [W3 ARIA practices](https://www.w3.org/TR/wai-aria-
 - [menu-bar](https://stardust-ui.github.io/accessibility/prototypes/menu/menu-bar.html) - Menu bar with submenus
 - [menu-bar-div](https://stardust-ui.github.io/accessibility/prototypes/menu/menu-bar-div.html) - Menu-bar modification with ```<div>``` elements instead of ```<button>```, as button can only contain inline elements
 - [menu-bar-single](https://stardust-ui.github.io/accessibility/prototypes/menu/menu-bar-single.html) - Menu-bar variant without submenu
+- [menu-button-div](https://stardust-ui.github.io/accessibility/prototypes/menu-button/menu-button-div.html) - Menu button (dropdown)
 
 ## Lists
 - [selectable-list](https://stardust-ui.github.io/accessibility/prototypes/lists/selectable-list.html) - List with selectable/actionable items

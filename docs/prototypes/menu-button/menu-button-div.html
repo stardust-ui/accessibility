@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Selectable dropdown</title>
+  <link rel="stylesheet" href="menu-button.css">
+</head>
+
+<h2>Menu button</h2>
+<h3>Menu button</h3>
+<p>
+  Button component that opens a menu (dropdown) after clicked. User can use arrow keys to select the option and ENTER to execute. ESC closes the menu and returns the focus to the button.
+</p>
+<p>
+  With screen reader, user needs to be able to navigate to and inside of the menu using virtual cursor. Screen reader reads
+  the content of the item as well as the position.
+</p>
+
+<a href="#">Just for the sake of focus</a>
+<div class="menu_button">
+  <button id="menubutton" aria-haspopup="true" aria-controls="menu2">
+
+    WAI-ARIA Quick Links
+
+  </button>
+  <ul id="menu2" role="menu" aria-labelledby="menubutton">
+    <li role="none">
+      <div role="menuitem">
+
+        W3C Home Page
+
+      </div>
+    </li>
+    <li role="none">
+      <div role="menuitem">
+
+        W3C Web Accessibility Initiative
+
+      </div>
+    </li>
+    <li role="none">
+      <div role="menuitem">
+
+        Accessible Rich Internet Application Specification
+
+      </div>
+    </li>
+    <li role="none">
+      <div role="menuitem">
+
+        WAI-ARIA Authoring Practices
+
+      </div>
+    </li>
+    <li role="none">
+      <div role="menuitem">
+
+        WAI-ARIA Implementation Guide
+
+      </div>
+    </li>
+    <li role="none">
+      <div role="menuitem">
+
+        Accessible Name and Description
+
+      </div>
+    </li>
+  </ul>
+</div>
+<a href="#">Just for the sake of focus</a>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="menu-button.js"></script>
+<script src="menu-item-links.js"></script>
+<script src="popup-menu.js"></script>
+<script type="text/javascript">
+  window.onload = function () {
+    var menubutton = new Menubutton(document.getElementById('menubutton'), 'div');
+    menubutton.init();
+  }
+</script>
+
+</html>
