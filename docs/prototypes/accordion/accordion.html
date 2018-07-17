@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Input with button</title>
+    <link rel="stylesheet" href="accordion.css">
+    <link rel="stylesheet" href="../lists/selectable-list.css">
+</head>
+
+<body>
+
+    <a href="#">Just for the sake of focus</a>
+    <br>
+    <br>
+    <br>
+    <div role="list">
+        <div role="listitem" class="accordion-container">
+            <button class="expand-btn" aria-controls="listbox" aria-expanded="false">
+                <span>Expand me to explore options</span>
+                <svg viewBox="0 0 32 32" role="presentation" class="triangle-down" focusable="false">
+                    <polygon class="icons-default-fill" points="16,19 19.5,15 12.5,15 "></polygon>
+                </svg>
+                <svg viewBox="0 0 32 32" role="presentation" class="triangle-right" focusable="false">
+                    <polygon class="icons-default-fill" points="19,16 15,12.5 15,19.5 "></polygon>
+                </svg>
+            </button>
+
+            <ul role="listbox" class="listbox">
+                <li role="option">
+                    <div class="info-card-container">
+                        <div class="info-card-left">
+                            <img role="presentation" src="../img/icons-star.png" />
+                        </div>
+                        <div class="info-card-right singleLineTruncation">
+                            <span class="info-card-right-title singleLineTruncation">
+                                Mr Batman
+                            </span>
+                            <span class="info-card-right-msg singleLineTruncation">
+                                If we program the sensor, we can get to the SAS alarm through the haptic SQL card!
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <li role="option">
+                    <div class="info-card-container">
+                        <div class="info-card-left">
+                            <img role="presentation" src="../img/icons-star.png" />
+                        </div>
+                        <div class="info-card-right singleLineTruncation">
+                            <span class="info-card-right-title singleLineTruncation">
+                                Miss Black Widow
+                            </span>
+                            <span class="info-card-right-msg singleLineTruncation">
+                                The GB pixel is down, navigate the virtual interface!
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <li role="option">
+                    <div class="info-card-container">
+                        <div class="info-card-left">
+                            <img role="presentation" src="../img/icons-star.png" />
+                        </div>
+                        <div class="info-card-right singleLineTruncation">
+                            <span class="info-card-right-title singleLineTruncation">
+                                Ted
+                            </span>
+                            <span class="info-card-right-msg singleLineTruncation">
+                                Use the online FTP application, then you can input the multi-byte application!
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+        <div role="listitem" class="accordion-container">
+            <button class="expand-btn" aria-controls="listbox" aria-expanded="false">
+                <span>Expand me to explore even more options!</span>
+                <svg viewBox="0 0 32 32" role="presentation" class="triangle-down" focusable="false">
+                    <polygon class="icons-default-fill" points="16,19 19.5,15 12.5,15 "></polygon>
+                </svg>
+                <svg viewBox="0 0 32 32" role="presentation" class="triangle-right" focusable="false">
+                    <polygon class="icons-default-fill" points="19,16 15,12.5 15,19.5 "></polygon>
+                </svg>
+            </button>
+
+            <ul role="listbox" class="listbox">
+                <li role="option">
+                    <div class="info-card-container">
+                        <div class="info-card-left">
+                            <img role="presentation" src="../img/icons-star.png" />
+                        </div>
+                        <div class="info-card-right singleLineTruncation">
+                            <span class="info-card-right-title singleLineTruncation">
+                                Rihanna
+                            </span>
+                            <span class="info-card-right-msg singleLineTruncation">
+                                Umbrella ella ella e e e.
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <li role="option">
+                    <div class="info-card-container">
+                        <div class="info-card-left">
+                            <img role="presentation" src="../img/icons-star.png" />
+                        </div>
+                        <div class="info-card-right singleLineTruncation">
+                            <span class="info-card-right-title singleLineTruncation">
+                                Ted
+                            </span>
+                            <span class="info-card-right-msg singleLineTruncation">
+                                Use the online FTP application, then you can input the multi-byte application!
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <a href="#">Just for the sake of focus</a>
+
+    <script src="../lists/selectable-list.js"></script>
+    <script src="accordion.js"></script>
+    <script>
+        var lists = document.querySelectorAll('.listbox');
+        [].slice.apply(lists).map(function (list) {
+            var selectableList = new SelectableList(list);
+            selectableList.init();
+        });
+
+        var accordions = new Accordions();
+    </script>
+
+</body>
+
+</html>

@@ -24,7 +24,7 @@
   <li>
     <div class="info-card-container">
       <div class="info-card-left">
-        <img role="presentation" src="/img/icons-star.png" />
+        <img role="presentation" src="../img/icons-star.png" />
       </div>
       <div class="info-card-right singleLineTruncation">
         <span class="info-card-right-title singleLineTruncation">
@@ -39,7 +39,7 @@
   <li>
     <div class="info-card-container">
       <div class="info-card-left">
-        <img role="presentation" src="/img/icons-star.png" />
+        <img role="presentation" src="../img/icons-star.png" />
       </div>
       <div class="info-card-right singleLineTruncation">
         <span class="info-card-right-title singleLineTruncation">
@@ -54,7 +54,7 @@
   <li>
     <div class="info-card-container">
       <div class="info-card-left">
-        <img role="presentation" src="/img/icons-star.png" />
+        <img role="presentation" src="../img/icons-star.png" />
       </div>
       <div class="info-card-right singleLineTruncation">
         <span class="info-card-right-title singleLineTruncation">
@@ -69,7 +69,7 @@
   <li>
     <div class="info-card-container">
       <div class="info-card-left">
-        <img role="presentation" src="/img/icons-star.png" />
+        <img role="presentation" src="../img/icons-star.png" />
       </div>
       <div class="info-card-right singleLineTruncation">
         <span class="info-card-right-title singleLineTruncation">
@@ -84,7 +84,7 @@
   <li>
     <div class="info-card-container">
       <div class="info-card-left">
-        <img role="presentation" src="/img/icons-star.png" />
+        <img role="presentation" src="../img/icons-star.png" />
       </div>
       <div class="info-card-right singleLineTruncation">
         <span class="info-card-right-title singleLineTruncation">
@@ -99,7 +99,10 @@
 </ul>
 <a href="#">Just for the sake of focus</a>
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="selectable-list.js"></script>
+<script>
+  var selectableList = new SelectableList(document.querySelector('ul'));
+  selectableList.init();
+</script>
 
 </html>

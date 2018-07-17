@@ -1,0 +1,29 @@
+button {
+    background-color: rgb(175, 223, 137);
+    padding: 10px 20px;
+    border-radius: 5px;
+    vertical-align: bottom;
+  }
+
+input, textarea {
+    width: 200px;
+    padding: 10px 20px;
+}
+
+h3 {
+    color: #666;
+}
+
+.clear-btn {
+    background-color: #ccc;
+    padding: 10px 10px;
+    width: 40px;
+    height: 37px;
+    border-radius: 5px;
+    margin-left: -42px;
+    color: red;
+}
+
+.clear-input-container input{
+    padding-right: 42px;
+}

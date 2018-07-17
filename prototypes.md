@@ -15,3 +15,7 @@ They will mostly be based on [W3 ARIA practices](https://www.w3.org/TR/wai-aria-
 
 ## Lists
 - [selectable-list](https://stardust-ui.github.io/accessibility/prototypes/lists/selectable-list.html) - List with selectable/actionable items
+- [listbox](https://stardust-ui.github.io/accessibility/prototypes/lists/listbox.html) - Listbox with selectable/actionable items
+
+## Accordion
+- [accordion](https://stardust-ui.github.io/accessibility/prototypes/accordion/accordion.html) - Accordion with listbox inside
