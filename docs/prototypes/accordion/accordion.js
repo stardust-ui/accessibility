@@ -4,6 +4,63 @@ function Accordions() {
         var accordion = new Accordion(accordion);
         accordion.init();
     });
+
+    var lists = [].slice.apply(document.querySelectorAll('ul'));
+    var buttons = [].slice.apply(document.querySelectorAll('button'));
+
+    for (let index = 0; index < buttons.length; index++) {
+        let btn = buttons[index];
+        let firstLi = lists[index].querySelector('li:first-child');
+        let lastLi = lists[index].querySelector('li:last-child');
+
+        let nextBtnIndex = index === buttons.length - 1 ? 0 : index + 1;
+        let prevBtnIndex = index === 0 ? buttons.length - 1 : index - 1;
+
+        btn.addEventListener('keydown', function(event) {
+            if (event.keyCode === keys.down) {
+                if (isExpanded(this)) {                    
+                    firstLi.focus();
+                }
+                else {
+                    var nextBtn = buttons[nextBtnIndex];
+                    nextBtn.focus();
+                }
+            }
+
+            if (event.keyCode === keys.up) {
+                var prevBtn = buttons[prevBtnIndex];
+                var lastPrevLi = lists[prevBtnIndex].querySelector('li:last-child');
+
+                if (isExpanded(prevBtn)) {
+                    if (prevBtnIndex !== buttons.length - 1) {                        
+                        lastPrevLi.focus();
+                    }
+                }
+                else {
+                    prevBtn.focus();
+                }
+            }
+        });
+
+        lastLi.addEventListener('keydown', function(event) {
+            if (event.keyCode === keys.down) {
+
+                if (nextBtnIndex === 0) {
+                    return;
+                }
+                else {
+                    var nextBtn = buttons[nextBtnIndex];
+                    nextBtn.focus();
+                }
+            }           
+        });
+
+        firstLi.addEventListener('keydown', function(event) {
+            if (event.keyCode === keys.up) {
+                btn.focus();
+            }
+        });      
+    }
 }
 
 function Accordion(node) {
