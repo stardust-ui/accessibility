@@ -21,8 +21,8 @@
 
 <a href="#">Just for the sake of focus</a>
 <ul role="listbox">
-    <li role="option">
-        <div class="info-card-container">
+    <li role="presentation">
+        <div class="info-card-container" role="option" id="opt1">
             <div class="info-card-left">
                 <img role="presentation" src="../img/icons-star.png" />
             </div>
@@ -36,8 +36,8 @@
             </div>
         </div>
     </li>
-    <li role="option">
-        <div class="info-card-container">
+    <li role="presentation">
+        <div class="info-card-container" role="option" id="opt2">
             <div class="info-card-left">
                 <img role="presentation" src="../img/icons-star.png" />
             </div>
@@ -51,8 +51,8 @@
             </div>
         </div>
     </li>
-    <li role="option">
-        <div class="info-card-container">
+    <li role="presentation">
+        <div class="info-card-container" role="option" id="opt3">
             <div class="info-card-left">
                 <img role="presentation" src="../img/icons-star.png" />
             </div>
@@ -66,8 +66,8 @@
             </div>
         </div>
     </li>
-    <li role="option">
-        <div class="info-card-container">
+    <li role="presentation">
+        <div class="info-card-container" role="option" id="opt4">
             <div class="info-card-left">
                 <img role="presentation" src="../img/icons-star.png" />
             </div>
@@ -81,8 +81,8 @@
             </div>
         </div>
     </li>
-    <li role="option">
-        <div class="info-card-container">
+    <li role="presentation">
+        <div class="info-card-container" role="option" id="opt5">
             <div class="info-card-left">
                 <img role="presentation" src="../img/icons-star.png" />
             </div>
@@ -102,7 +102,7 @@
 <script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="selectable-list.js"></script>
 <script>
-  var selectableList = new SelectableList(document.querySelector('ul'));
+  var selectableList = new SelectableList(document.querySelector('ul'), 'option');
   selectableList.init();
 </script>
 

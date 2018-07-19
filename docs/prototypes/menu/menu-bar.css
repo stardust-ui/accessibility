@@ -47,7 +47,7 @@
 	background-color: #036;
 }
 
-#appmenu [aria-haspopup="true"] + [role="menu"] {
+#appmenu [role="menu"] {
 	display: none;
 	position:absolute;
 	left:0;
@@ -59,6 +59,6 @@
 	text-align: left;
 }
 
-#appmenu [aria-haspopup="true"][aria-expanded="true"] + [role="menu"] {
+#appmenu [aria-expanded="true"] + [role="menu"] {
 	display:block;
 }
