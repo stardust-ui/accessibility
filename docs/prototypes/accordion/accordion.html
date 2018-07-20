@@ -28,8 +28,8 @@
             </button>
 
             <ul role="listbox" class="listbox">
-                <li role="option">
-                    <div class="info-card-container">
+                <li>
+                    <div class="info-card-container" role="option">
                         <div class="info-card-left">
                             <img role="presentation" src="../img/icons-star.png" />
                         </div>
@@ -43,8 +43,8 @@
                         </div>
                     </div>
                 </li>
-                <li role="option">
-                    <div class="info-card-container">
+                <li>
+                    <div class="info-card-container" role="option">
                         <div class="info-card-left">
                             <img role="presentation" src="../img/icons-star.png" />
                         </div>
@@ -58,8 +58,8 @@
                         </div>
                     </div>
                 </li>
-                <li role="option">
-                    <div class="info-card-container">
+                <li>
+                    <div class="info-card-container" role="option">
                         <div class="info-card-left">
                             <img role="presentation" src="../img/icons-star.png" />
                         </div>
@@ -88,8 +88,8 @@
             </button>
 
             <ul role="listbox" class="listbox">
-                <li role="option">
-                    <div class="info-card-container">
+                <li>
+                    <div class="info-card-container" role="option">
                         <div class="info-card-left">
                             <img role="presentation" src="../img/icons-star.png" />
                         </div>
@@ -103,8 +103,8 @@
                         </div>
                     </div>
                 </li>
-                <li role="option">
-                    <div class="info-card-container">
+                <li>
+                    <div class="info-card-container" role="option">
                         <div class="info-card-left">
                             <img role="presentation" src="../img/icons-star.png" />
                         </div>
@@ -132,7 +132,7 @@
     <script>
         var lists = document.querySelectorAll('.listbox');
         [].slice.apply(lists).map(function (list) {
-            var selectableList = new SelectableList(list);
+            var selectableList = new SelectableList(list, 'option');
             selectableList.init();
         });
 

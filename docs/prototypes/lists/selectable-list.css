@@ -16,11 +16,14 @@ li {
   list-style-type: none;
 }
 
-li[aria-selected="true"] {
+[aria-selected="true"] {
   background-color: pink;
 }
 
-li:focus, li:hover {
+[role='listitem']:focus,
+[role='listitem']:hover,
+[role='option']:focus,
+[role='option']:hover {
   outline: none;
   background-color: purple;
 }

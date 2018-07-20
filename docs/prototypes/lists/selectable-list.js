@@ -6,12 +6,15 @@ const keys = {
   left: 37,
   up: 38,
   right: 39,
-  down: 40
+  down: 40,
+  end: 35,
+  home: 36
 };
 
-function SelectableList(node) {
-
-  this.listItems = node.getElementsByTagName("li");
+function SelectableList(node, itemRole) {
+  this.listItems = [].slice.apply(node.querySelectorAll("[role='" + itemRole + "']"));
+  this.itemRole = itemRole;
+  this.parentNode = node;
 }
 
 SelectableList.prototype.init = function() {
@@ -19,7 +22,7 @@ SelectableList.prototype.init = function() {
   this.kbFocusIndex = 0;
 
   for (let index = 0; index < this.listItems.length; index++) {
-    const item = this.listItems.item(index);
+    const item = this.listItems[index];
     if (index === 0) {
       item.setAttribute("tabindex", "0");
     } else {
@@ -52,12 +55,16 @@ SelectableList.prototype.init = function() {
         case keys.space:
           this.applySelection(this.kbFocusIndex);
           break;
+        case keys.home:
+          this.applyKbFocus(0);
+          break;
+        case keys.end:
+          this.applyKbFocus(this.listItems.length - 1);
+          break;
       }
     });
   }
 }
-
-
 
 SelectableList.prototype.applySelection = function(index) {
   if (index >= this.listItems.length || index < 0) {
@@ -70,6 +77,14 @@ SelectableList.prototype.applySelection = function(index) {
   this.listItems[this.selectedIndex].focus();
   this.listItems[this.selectedIndex].setAttribute("tabindex", "0");
   this.listItems[this.selectedIndex].setAttribute("aria-selected", "true");
+  var id = this.listItems[this.selectedIndex].id;
+
+  if (id) {
+    this.parentNode.setAttribute('aria-activedescendant', id);
+  }
+  else {
+    this.parentNode.removeAttribute('aria-activedescendant');
+  }
 
   window.alert(this.listItems[this.selectedIndex]
     .getElementsByClassName("info-card-right-title")
@@ -84,6 +99,5 @@ SelectableList.prototype.applyKbFocus = function(index) {
 }
 
 SelectableList.prototype.getIndexInList = function(child) {
-  var listItemsArray = [].slice.apply(this.listItems);
-  return listItemsArray.indexOf(child.nodeName === 'LI' ? child : child.parentElement);
+  return this.listItems.indexOf(child.getAttribute('role') === this.itemRole ? child : child.parentElement);
 }
