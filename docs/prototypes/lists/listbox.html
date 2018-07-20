@@ -10,14 +10,34 @@
 
 <h2>List</h2>
 <h3>Selectable list</h3>
-<p>
-    List component where items are actionable. User can navigate to the list and use arrow keys to navigate through the list
-    items. Enter or space execute an action.
-</p>
-<p>
-    With screen reader, user needs to be able to navigate to and inside of the menu using virtual cursor. Screen reader reads
-    the content of the item as well as the position.
-</p>
+<h3>
+    <b>Notes:</b>
+</h3>
+<div>
+    Edge/Narrator
+    <br> - works fine expect of scan mode... When navigating up it was reading empty paragraph. Similarly as for button with
+    SVG.
+</div>
+<br>
+<div>
+    JAWS
+    <br> - virtual cursor > navigation doesn't works inside list, but narrate selection state
+    <br> - normal mode > doesn't narrate selection state
+</div>
+<br>
+<div>
+    NVDA
+    <br> - NORMAL > it narrate no selected, but doesn't narrated selected item
+    <br> - BROWSE MODE > we could not get navigation working
+</div>
+<br>
+<div>
+    VoiceOver
+    <br> - Pros: It does read which item was selected
+    <br> - Cons: when you move out of list, it can read last focused element as selected, if nothing else was selected
+</div>
+<br>
+<br>
 
 <a href="#">Just for the sake of focus</a>
 <ul role="listbox">
