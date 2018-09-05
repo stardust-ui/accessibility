@@ -1,0 +1,89 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/**
+  List Component
+*/
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.horizontal-list,
+.vertical-list {
+  border: 1px solid gray;
+}
+
+.horizontal-list {
+  display: flex;
+  align-items: center;
+}
+
+.vertical-list li,
+.horizontal-list li {
+  padding: 0 10px;
+  margin: 6px;
+}
+
+/**
+  Menu Component
+*/
+
+
+.app-menu li {
+	display:block;
+}
+
+.app-menu [role="menuitem"] {
+	padding: 10px 20px;
+  width: 100px;
+  border: gray 1px dashed;
+}
+
+.app-menu > li {
+	float: left;
+	text-align: center;
+	position: relative;
+}
+
+.app-menu [role="menu"] {
+	display: none;
+	position:absolute;
+	left:0;
+	right:0;
+	top:100%;
+	padding:0;
+	margin:0;
+	text-align: left;
+}
+
+.app-menu [aria-expanded="true"] + [role="menu"] {
+	display:block;
+}
