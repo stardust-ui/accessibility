@@ -241,6 +241,7 @@ export class Menu extends React.Component<IMenuProps> {
       case SPACE:
         console.log('ENTER or SPACE Key Pressed')
         this.toggleSubMenu(current);
+        this.focusFirstItem(current);
         break;
       case ESC:
         console.log('ESC Key Pressed')
@@ -268,6 +269,15 @@ export class Menu extends React.Component<IMenuProps> {
     var currState = menuItem.getAttribute("aria-expanded");
     var nextState = currState === "false" ? "true" : "false";
     menuItem.setAttribute("aria-expanded", nextState);
+  }
+
+  private focusFirstItem(menuItem: HTMLElement) {
+    if (!this.hasPopup(menuItem)) {
+      return;
+    }
+
+    const firstItem = (menuItem.nextElementSibling as HTMLElement).firstChild!.firstChild! as HTMLElement
+    firstItem.focus();
   }
 
   private closeSubMenu(menuItem: HTMLElement) {
