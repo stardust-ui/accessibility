@@ -43,7 +43,6 @@ ul {
 
 .horizontal-list {
   display: flex;
-  align-items: center;
 }
 
 .vertical-list li,
@@ -86,4 +85,23 @@ ul {
 
 .app-menu [aria-expanded="true"] + [role="menu"] {
 	display:block;
+}
+
+/**
+  Universal List Component
+*/
+.list, .list ul,
+.menu, .menu ul,
+.tree, .tree ul {
+  border: 1px solid gray;
+}
+
+.horizontal {
+  display: flex;
+}
+
+.vertical li,
+.horizontal li {
+  padding: 0 10px;
+  margin: 6px;
 }

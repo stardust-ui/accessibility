@@ -119,6 +119,11 @@ export class List extends React.Component<IListProps> {
 
         break;
     }
+
+    if (e.keyCode !== 9) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
   }
 
   render() {
@@ -250,6 +255,11 @@ export class Menu extends React.Component<IMenuProps> {
         currentActiveMenuItem.focus()
         currentActiveMenuItem.tabIndex = 0;
         break;
+    }
+
+    if (e.keyCode !== 9) {
+      e.preventDefault();
+      e.stopPropagation();
     }
   }
 
