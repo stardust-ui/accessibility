@@ -1,6 +1,6 @@
 import * as React from 'react';
 import './App.css';
-import { List, Menu, MenuEx, IListProps, TreeEx } from "./components/components";
+import { List, Menu, MenuEx, IListProps, TreeEx, Dropdown, DropdownList } from "./components/components";
 
 class App extends React.Component {
   public render() {
@@ -8,6 +8,8 @@ class App extends React.Component {
     const listItems1 = [{title: 'item 1'}, {title: 'item 2'}, {title: 'item 3'}, {title: 'item 4'}]
     const listItems2 = [{title: 'item 1'}, {title: 'item 2'}, {title: 'item 3'}, {title: 'item 4'}, {title: 'item 5'}, {title: 'item 6'}]
     const listItems3 = [{title: 'item 1'}, {title: 'item 2'}]
+
+    const dropdownListItems = [{title: 'item 1', dropdownItems: listItems1}, {title: 'item 2'}, {title: 'long item 3', dropdownItems: listItems2}, {title: 'item 4'}]
 
     const menuItems = [{
       title: 'File',
@@ -90,6 +92,16 @@ class App extends React.Component {
 
     return (
       <>
+        <h1>Dropdown Example</h1>
+        <div>
+          Dropdown:&nbsp;<Dropdown items={listItems1} />
+        </div>
+
+        <h1>Dropdown List Example</h1>
+        <div>
+          <DropdownList items={dropdownListItems} direction='vertical' />
+        </div>
+
         <h1>Menu Example</h1>
         <div>
           <Menu items={menuItems} />

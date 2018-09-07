@@ -50,6 +50,7 @@ ul {
 .horizontal-list li {
   padding: 0 10px;
   margin: 6px;
+  white-space: nowrap;
 }
 
 /**
@@ -86,4 +87,41 @@ ul {
 
 .app-menu [aria-expanded="true"] + [role="menu"] {
 	display:block;
+}
+
+/**
+  Dropdown
+*/
+
+div.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+div.dropdown > ul {
+  position: absolute;
+  left:0;
+  background-color: white;
+  z-index: 999;
+}
+
+div.dropdown > ul > li {
+  white-space: nowrap;
+}
+
+ul[data-dropdown-open="false"] {
+  display: none;
+}
+
+ul[data-dropdown-open="true"] {
+  display: block;
+}
+
+/**
+  Dropdown List
+*/
+
+.vertical-list li > div.dropdown {
+  margin-left: 10px;
+  float: right;
 }
