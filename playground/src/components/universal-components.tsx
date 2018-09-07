@@ -16,7 +16,7 @@ interface IItemProps {
   subItems?: IItemProps[]
 }
 
-interface IUniversalItemProps<TParent> extends IItemProps {
+interface IAtomicItemProps<TParent> extends IItemProps {
   parentRef: React.RefObject<TParent>
 
   isFocused: boolean
@@ -30,25 +30,25 @@ interface IUniversalItemProps<TParent> extends IItemProps {
   onMoveLast: () => void
 }
 
-interface IUniversalItemState {
+interface IAtomicItemState {
 
 }
 
-interface IUniversalListProps {
+interface IContainerProps {
   items: IItemProps[]
   direction: 'horizontal' | 'vertical'
   type: 'list' | 'menu' | 'tree' | 'subList'
   nesting: 'root' | 'nested'
 }
 
-interface IUniversalListState {
+interface IContainerState {
   activeItemIdx: number
 }
 
-class UniversalItem<TParent> extends React.Component<IUniversalItemProps<TParent>, IUniversalItemState> {
+class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAtomicItemState> {
   private itemRef = React.createRef<HTMLLIElement>()
 
-  constructor(props: IUniversalItemProps<TParent>, state: IUniversalItemState) {
+  constructor(props: IAtomicItemProps<TParent>, state: IAtomicItemState) {
     super(props, state)
   }
 
@@ -62,7 +62,7 @@ class UniversalItem<TParent> extends React.Component<IUniversalItemProps<TParent
     const { title, subItems, isFocused } = this.props
 
     const subList = subItems
-      ? (<UniversalList items={subItems} direction='vertical' type='subList' nesting='nested' />)
+      ? (<Container items={subItems} direction='vertical' type='subList' nesting='nested' />)
       : (<></>)
 
     return (
@@ -158,10 +158,10 @@ class UniversalItem<TParent> extends React.Component<IUniversalItemProps<TParent
   }
 }
 
-class UniversalList extends React.Component<IUniversalListProps, IUniversalListState> {
+class Container extends React.Component<IContainerProps, IContainerState> {
   private parentRef = React.createRef<HTMLUListElement>()
 
-  constructor(props: IUniversalListProps, state: IUniversalListState) {
+  constructor(props: IContainerProps, state: IContainerState) {
     super(props, state)
 
     this.state = {
@@ -190,7 +190,7 @@ class UniversalList extends React.Component<IUniversalListProps, IUniversalListS
   private buildItems(items: IItemProps[]) {
     return items.map((item, idx) => {
       return (
-        <UniversalItem key={idx} title={item.title} subItems={item.subItems}
+        <AtomicItem key={idx} title={item.title} subItems={item.subItems}
           parentRef={this.parentRef}
 
           isFocused={idx === this.state.activeItemIdx}
@@ -242,7 +242,7 @@ export class AccessibleList extends React.Component<IAccListProps> {
   render() {
     const { items, direction } = this.props
 
-    return (<UniversalList type='list' items={items} direction={direction} nesting='root' />)
+    return (<Container type='list' items={items} direction={direction} nesting='root' />)
   }
 }
 
@@ -259,7 +259,7 @@ export class AccessibleMenu extends React.Component<IAccMenuProps> {
   render() {
     const { items, direction } = this.props
 
-    return (<UniversalList type='menu' items={items} direction={direction} nesting='root' />)
+    return (<Container type='menu' items={items} direction={direction} nesting='root' />)
   }
 }
 
@@ -275,6 +275,6 @@ export class AccessibleTree extends React.Component<IAccTreeProps> {
   render() {
     const { items } = this.props
 
-    return (<UniversalList type='tree' items={items} direction='vertical' nesting='root' />)
+    return (<Container type='tree' items={items} direction='vertical' nesting='root' />)
   }
 }
