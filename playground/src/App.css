@@ -43,7 +43,6 @@ ul {
 
 .horizontal-list {
   display: flex;
-  align-items: center;
 }
 
 .vertical-list li,
@@ -124,4 +123,23 @@ ul[data-dropdown-open="true"] {
 .vertical-list li > div.dropdown {
   margin-left: 10px;
   float: right;
+}
+
+/**
+  Universal List Component
+*/
+.list, .list ul,
+.menu, .menu ul,
+.tree, .tree ul {
+  border: 1px solid gray;
+}
+
+.horizontal {
+  display: flex;
+}
+
+.vertical li,
+.horizontal li {
+  padding: 0 10px;
+  margin: 6px;
 }
