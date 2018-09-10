@@ -10,11 +10,14 @@ const ENTER = 13;
 const SPACE = 32;
 const ESC = 27;
 
+type OnMoveOuter = (shouldPropagateToRoot: boolean) => void
 
 interface IItemProps {
   title: string
   subItems?: IItemProps[]
 }
+
+interface IAtomicItem {}
 
 interface IAtomicItemProps<TParent> extends IItemProps {
   parentRef: React.RefObject<TParent>
@@ -28,10 +31,16 @@ interface IAtomicItemProps<TParent> extends IItemProps {
   onMoveNext: () => void
   onMoveFirst: () => void
   onMoveLast: () => void
+
+  onMoveOuter?: OnMoveOuter
 }
 
 interface IAtomicItemState {
+  isSubListFocused: boolean
+}
 
+interface IContainer {
+  moveInner: () => void
 }
 
 interface IContainerProps {
@@ -39,34 +48,58 @@ interface IContainerProps {
   direction: 'horizontal' | 'vertical'
   type: 'list' | 'menu' | 'tree' | 'subList'
   nesting: 'root' | 'nested'
+  isFocused?: boolean
+
+  onMoveOuter?: OnMoveOuter
 }
 
 interface IContainerState {
   activeItemIdx: number
 }
 
-class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAtomicItemState> {
+class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAtomicItemState> implements IAtomicItem {
   private itemRef = React.createRef<HTMLLIElement>()
+  private subListRef = React.createRef<Container>()
 
   constructor(props: IAtomicItemProps<TParent>, state: IAtomicItemState) {
     super(props, state)
+
+    this.state = {
+      isSubListFocused: false
+    }
+  }
+
+  private shouldFocus() {
+    return this.props.isFocused && !this.state.isSubListFocused
   }
 
   componentDidUpdate() {
-    if (this.props.isFocused) {
+    if (this.shouldFocus()) {
       this.itemRef.current!.focus()
     }
   }
 
   render() {
-    const { title, subItems, isFocused } = this.props
+    const { title, subItems } = this.props
 
     const subList = subItems
-      ? (<Container items={subItems} direction='vertical' type='subList' nesting='nested' />)
+      ? (<>
+          &nbsp;
+          <span>&bull;&bull;&bull;</span>
+          <Container
+            ref={this.subListRef}
+            items={subItems}
+            direction='vertical'
+            type='subList'
+            nesting='nested'
+            isFocused={this.state.isSubListFocused}
+            onMoveOuter={this.moveFromInner.bind(this)}
+          />
+        </>)
       : (<></>)
 
     return (
-      <li tabIndex={isFocused ? 0 : -1} onKeyDown={this.onKeyDown.bind(this)} ref={this.itemRef} data-has-sub-list={subItems ? true : false}>
+      <li tabIndex={this.shouldFocus() ? 0 : -1} onKeyDown={this.onKeyDown.bind(this)} ref={this.itemRef} data-has-sub-list={subItems ? true : false}>
         {title}
         {subList}
       </li>
@@ -105,6 +138,31 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
     this.props.onMoveLast()
   }
 
+  private moveInner() {
+    if (!this.props.subItems || this.props.subItems.length <= 0) {
+      return
+    }
+
+    this.setState({
+      isSubListFocused: true,
+    })
+    this.subListRef.current!.moveInner()
+  }
+
+  private moveFromInner(shouldPropagateToRoot: boolean) {
+    if (!this.props.subItems || this.props.subItems.length <= 0) {
+      return
+    }
+
+    this.setState({
+      isSubListFocused: false,
+    })
+
+    if (shouldPropagateToRoot && this.props.onMoveOuter) {
+      this.props.onMoveOuter(true)
+    }
+  }
+
   private onKeyDown(e: KeyboardEvent): void {
     switch (e.keyCode) {
       case END:
@@ -139,14 +197,21 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
 
       case ENTER:
         console.log('ENTER Key Pressed')
+        if (this.props.onMoveOuter) {
+          this.props.onMoveOuter(true)
+        }
         break
 
       case SPACE:
         console.log('SPACE Key Pressed')
+        this.moveInner()
         break
 
       case ESC:
         console.log('ESC Key Pressed')
+        if (this.props.onMoveOuter) {
+          this.props.onMoveOuter(false)
+        }
         break
     }
 
@@ -158,7 +223,7 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
   }
 }
 
-class Container extends React.Component<IContainerProps, IContainerState> {
+class Container extends React.Component<IContainerProps, IContainerState> implements IContainer {
   private parentRef = React.createRef<HTMLUListElement>()
 
   constructor(props: IContainerProps, state: IContainerState) {
@@ -167,6 +232,10 @@ class Container extends React.Component<IContainerProps, IContainerState> {
     this.state = {
       activeItemIdx: 0
     }
+  }
+
+  public moveInner() {
+    // TODO: is it really fine if this is empty? :-)
   }
 
   render() {
@@ -180,7 +249,7 @@ class Container extends React.Component<IContainerProps, IContainerState> {
       )
     } else {
       return (
-        <ul ref={this.parentRef} data-sub-list>
+        <ul ref={this.parentRef} data-sub-list={this.props.isFocused ? 'open' : 'closed'}>
           {this.buildItems(items)}
         </ul>
       )
@@ -200,7 +269,10 @@ class Container extends React.Component<IContainerProps, IContainerState> {
           onMovePrevious={this.movePrevious.bind(this)}
           onMoveNext={this.moveNext.bind(this)}
           onMoveFirst={this.moveFirst.bind(this)}
-          onMoveLast={this.moveLast.bind(this)} />
+          onMoveLast={this.moveLast.bind(this)}
+
+          onMoveOuter={this.moveOutside.bind(this)}
+        />
       )
     })
   }
@@ -227,6 +299,14 @@ class Container extends React.Component<IContainerProps, IContainerState> {
     this.setState({activeItemIdx: this.props.items.length - 1})
 
     console.log('moveLast() - active index changed:'+ this.state.activeItemIdx)
+  }
+
+  private moveOutside(shouldPropagateToRoot: boolean): void {
+    if (this.props.onMoveOuter) {
+      this.props.onMoveOuter(shouldPropagateToRoot)
+    }
+
+    console.log('moveOutside()')
   }
 }
 

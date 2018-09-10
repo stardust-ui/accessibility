@@ -143,3 +143,25 @@ ul[data-dropdown-open="true"] {
   padding: 0 10px;
   margin: 6px;
 }
+
+/**
+  Universal Nesting
+*/
+
+ul.list[data-top-level] {
+  position: relative;
+}
+
+ul.list ul[data-sub-list] {
+  position: absolute;
+  background-color: white;
+  z-index: 999;
+}
+
+ul.list > li {
+  white-space: nowrap;
+}
+
+ul.list ul[data-sub-list="closed"] {
+  display: none;
+}
