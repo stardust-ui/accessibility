@@ -306,7 +306,7 @@ class Container extends React.Component<IContainerProps, IContainerState> implem
       this.props.onMoveOuter(shouldPropagateToRoot)
     }
 
-    console.log('moveOutside()')
+    console.log('moveOuter()')
   }
 }
 
