@@ -271,7 +271,7 @@ class Container extends React.Component<IContainerProps, IContainerState> implem
           onMoveFirst={this.moveFirst.bind(this)}
           onMoveLast={this.moveLast.bind(this)}
 
-          onMoveOuter={this.moveOutside.bind(this)}
+          onMoveOuter={this.moveOuter.bind(this)}
         />
       )
     })
@@ -301,7 +301,7 @@ class Container extends React.Component<IContainerProps, IContainerState> implem
     console.log('moveLast() - active index changed:'+ this.state.activeItemIdx)
   }
 
-  private moveOutside(shouldPropagateToRoot: boolean): void {
+  private moveOuter(shouldPropagateToRoot: boolean): void {
     if (this.props.onMoveOuter) {
       this.props.onMoveOuter(shouldPropagateToRoot)
     }
