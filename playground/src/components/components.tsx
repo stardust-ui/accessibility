@@ -418,7 +418,7 @@ export class Dropdown extends React.Component<IDropdownProps> {
     return (
       <div className="dropdown" ref={this.parentElement} onKeyDown={this.onKeyDown.bind(this)} onBlur={this.onBlur.bind(this)} onFocus={() => console.log('focus')}>
         <span tabIndex={this.props.isNested ? -1 : 0} onClick={this.showAndFocusDropdown.bind(this, null)}>&bull;&bull;&bull;</span>
-        <List direction="vertical" items={this.props.items} />
+        <DropdownList direction="vertical" items={this.props.items} />
       </div>
     )
   }
@@ -431,7 +431,7 @@ export interface IDropdownListProps {
 
 export interface IDropdownListItemProps {
   title: string | any;
-  dropdownItems?: IListItemProps[];
+  dropdownItems?: IDropdownListItemProps[];
   idx?: number;
   isActive?: boolean;
   isFirstItem?: boolean;
