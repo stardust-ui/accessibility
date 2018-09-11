@@ -22,6 +22,7 @@ interface IAtomicItemProps<TParent> extends IItemProps {
   parentRef: React.RefObject<TParent>
   parentDirection: Direction
 
+  idx: number
   isFocused: boolean
 
   isFirstElement: boolean
@@ -37,7 +38,7 @@ interface IAtomicItemProps<TParent> extends IItemProps {
 }
 
 interface IAtomicItemState {
-  shouldFocusContainer: boolean
+  shouldFocusSubContainer: boolean
 }
 
 interface IContainerProps {
@@ -58,11 +59,11 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
   constructor(props: IAtomicItemProps<TParent>, state: IAtomicItemState) {
     super(props, state)
 
-    this.state = { shouldFocusContainer: false }
+    this.state = { shouldFocusSubContainer: false }
   }
 
   componentDidUpdate() {
-    if (this.props.isFocused) {
+    if (this.props.isFocused && !this.state.shouldFocusSubContainer) {
       this.itemRef.current!.focus()
     }
   }
@@ -71,7 +72,7 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
     const { title, subItems, isFocused } = this.props
 
     const subList = subItems
-      ? (<Container items={subItems} direction='vertical' type='subList' nesting='nested' shouldFocusFirstItem={this.state.shouldFocusContainer} />)
+      ? (<Container items={subItems} direction='vertical' type='subList' nesting='nested' shouldFocusFirstItem={this.state.shouldFocusSubContainer} />)
       : (<></>)
 
     return (
@@ -119,7 +120,7 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
       return
     }
 
-    this.setState({shouldFocusContainer: true})
+    this.setState({shouldFocusSubContainer: true})
 
     this.props.onEnter(this.state)
   }
@@ -219,6 +220,12 @@ class Container extends React.Component<IContainerProps, IContainerState> {
     }
   }
 
+  componentWillReceiveProps(nextProps: IContainerProps): void {
+    if (!this.props.shouldFocusFirstItem && nextProps.shouldFocusFirstItem === true) {
+      this.setState({ activeItemIdx: 0 })
+    }
+  }
+
   render() {
     const { direction, type, nesting } = this.props
 
@@ -246,7 +253,9 @@ class Container extends React.Component<IContainerProps, IContainerState> {
           parentRef={this.parentRef}
           parentDirection={this.props.direction}
 
-          isFocused={(idx === this.state.activeItemIdx) || (this.props.shouldFocusFirstItem! && idx === 0)}
+          idx={idx}
+
+          isFocused={(idx === this.state.activeItemIdx)}
           isFirstElement={idx === 0}
           isLastElement={idx === items.length - 1}
 
@@ -256,7 +265,8 @@ class Container extends React.Component<IContainerProps, IContainerState> {
           onMoveLast={this.moveLast.bind(this)}
           onEnter={this.enter.bind(this)}
           onSpace={this.space.bind(this)}
-          onEsc={this.esc.bind(this)} />
+          onEsc={this.esc.bind(this)}
+          />
       )
     })
   }
@@ -286,7 +296,6 @@ class Container extends React.Component<IContainerProps, IContainerState> {
   }
 
   private enter(): void {
-
     console.log('enter()')
   }
 
