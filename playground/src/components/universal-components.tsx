@@ -34,12 +34,11 @@ interface IAtomicItemProps extends IItemProps {
   onMoveLast: () => void
   onEnter: () => void
   onSpace: () => void
-  onEsc: (idx: number) => void
+  onEsc: () => void
 }
 
 interface IAtomicItemState {
-  shouldOpenSubContainer: boolean
-  shouldCloseSubContainer: boolean
+  shouldSubContainerBeOpened: boolean
 }
 
 interface IContainerProps {
@@ -62,13 +61,12 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
     super(props, state)
 
     this.state = {
-      shouldOpenSubContainer: false,
-      shouldCloseSubContainer: false
+      shouldSubContainerBeOpened: false
     }
   }
 
   componentDidUpdate() {
-    if (this.props.isFocused && !this.state.shouldOpenSubContainer) {
+    if (this.props.isFocused && !this.state.shouldSubContainerBeOpened) {
       this.itemRef.current!.focus()
     }
   }
@@ -78,7 +76,7 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
 
     const subList = subItems
       ? (<Container items={subItems} direction='vertical' type='subList' nesting='nested'
-                    shouldFocusFirstItem={this.state.shouldOpenSubContainer} />)
+                    shouldFocusFirstItem={this.state.shouldSubContainerBeOpened} />)
       : (<></>)
 
     return (
@@ -126,7 +124,7 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
       return
     }
 
-    this.setState({shouldOpenSubContainer: true})
+    this.setState({shouldSubContainerBeOpened: true})
 
     this.props.onEnter()
   }
@@ -144,8 +142,8 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
       return
     }
 
-    this.setState({shouldOpenSubContainer: false})
-    this.props.onEsc(this.props.idx)
+    this.setState({shouldSubContainerBeOpened: false})
+    this.props.onEsc()
   }
 
   private onKeyDown(e: KeyboardEvent): void {
@@ -227,10 +225,10 @@ class Container extends React.Component<IContainerProps, IContainerState> {
 
   componentWillReceiveProps(nextProps: IContainerProps): void {
     if (!this.props.shouldFocusFirstItem && nextProps.shouldFocusFirstItem) {
+      // This condition is responsible to focus first item
       this.setState({ focusItemOnIdx: 0 })
-    }
-
-    if (this.props.shouldFocusFirstItem && !nextProps.shouldFocusFirstItem) {
+    } else if (this.props.shouldFocusFirstItem && !nextProps.shouldFocusFirstItem) {
+      // This condition removes focus from all items in sub container
       this.setState({ focusItemOnIdx: -1 })
     }
   }
@@ -257,12 +255,7 @@ class Container extends React.Component<IContainerProps, IContainerState> {
 
   private buildItems(items: IItemProps[]) {
     return items.map((item, idx) => {
-      let isFocused = idx === this.state.focusItemOnIdx
-      if (this.state.focusItemOnIdx === -1) {
-        isFocused = false
-      }
-
-      console.log(`idx: ${idx}, isFocused: ${isFocused}`)
+      let isFocused = (idx === this.state.focusItemOnIdx) && (this.state.focusItemOnIdx !== -1)
 
       return (
         <AtomicItem key={idx} title={item.title} subItems={item.subItems}
@@ -326,11 +319,7 @@ class Container extends React.Component<IContainerProps, IContainerState> {
     console.log('space()')
   }
 
-  private esc(idx: number): void {
-    // this.setState({
-    //   focusItemOnIdx: idx
-    // })
-    // // this.forceUpdate()
+  private esc(): void {
     console.log('esc()')
   }
 }
