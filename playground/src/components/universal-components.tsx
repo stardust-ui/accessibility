@@ -39,6 +39,7 @@ interface IAtomicItemProps extends IItemProps {
 
 interface IAtomicItemState {
   shouldSubContainerBeOpened: boolean
+  isLastOpened: boolean
 }
 
 interface IContainerProps {
@@ -61,7 +62,8 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
     super(props, state)
 
     this.state = {
-      shouldSubContainerBeOpened: false
+      shouldSubContainerBeOpened: false,
+      isLastOpened: false
     }
   }
 
@@ -120,11 +122,18 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
   }
 
   private enter() {
+    this.setState({
+      isLastOpened: false
+    })
+
     if (!this.props.isFocused || !this.props.subItems) {
       return
     }
 
-    this.setState({shouldSubContainerBeOpened: true})
+    this.setState({
+      shouldSubContainerBeOpened: true,
+      isLastOpened: true
+    })
 
     this.props.onEnter()
   }
@@ -141,6 +150,8 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
     if (!this.props.isFocused) {
       return
     }
+
+    console.warn(`isLastOpened ${this.state.isLastOpened}`)
 
     this.setState({shouldSubContainerBeOpened: false})
     this.props.onEsc()
@@ -202,7 +213,14 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
 
       case ESC:
         console.log('ESC Key Pressed')
+
+        console.error(`isLastOpened ${this.state.isLastOpened}`)
         this.esc()
+        if (this.state.isLastOpened === true) {
+          e.preventDefault()
+          e.stopPropagation()
+          this.setState({isLastOpened: false})
+        }
         break
     }
 
