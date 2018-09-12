@@ -9,6 +9,7 @@ const DOWN_ARROW = 40;
 const ENTER = 13;
 const SPACE = 32;
 const ESC = 27;
+const TAB = 9;
 
 
 type Direction = 'horizontal' | 'vertical'
@@ -18,9 +19,8 @@ interface IItemProps {
   subItems?: IItemProps[]
 }
 
-interface IAtomicItemProps<TParent> extends IItemProps {
-  parentRef: React.RefObject<TParent>
-  parentDirection: Direction
+interface IAtomicItemProps extends IItemProps {
+  parentContainerDirection: Direction
 
   idx: number
   isFocused: boolean
@@ -32,13 +32,14 @@ interface IAtomicItemProps<TParent> extends IItemProps {
   onMoveNext: () => void
   onMoveFirst: () => void
   onMoveLast: () => void
-  onEnter: (state: IAtomicItemState) => void
+  onEnter: () => void
   onSpace: () => void
-  onEsc: () => void
+  onEsc: (idx: number) => void
 }
 
 interface IAtomicItemState {
-  shouldFocusSubContainer: boolean
+  shouldOpenSubContainer: boolean
+  shouldCloseSubContainer: boolean
 }
 
 interface IContainerProps {
@@ -46,24 +47,28 @@ interface IContainerProps {
   direction: Direction
   type: 'list' | 'menu' | 'tree' | 'subList'
   nesting: 'root' | 'nested'
-  shouldFocusFirstItem?: boolean
+
+  shouldFocusFirstItem: boolean
 }
 
 interface IContainerState {
-  activeItemIdx: number
+  focusItemOnIdx: number
 }
 
-class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAtomicItemState> {
+class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
   private itemRef = React.createRef<HTMLLIElement>()
 
-  constructor(props: IAtomicItemProps<TParent>, state: IAtomicItemState) {
+  constructor(props: IAtomicItemProps, state: IAtomicItemState) {
     super(props, state)
 
-    this.state = { shouldFocusSubContainer: false }
+    this.state = {
+      shouldOpenSubContainer: false,
+      shouldCloseSubContainer: false
+    }
   }
 
   componentDidUpdate() {
-    if (this.props.isFocused && !this.state.shouldFocusSubContainer) {
+    if (this.props.isFocused && !this.state.shouldOpenSubContainer) {
       this.itemRef.current!.focus()
     }
   }
@@ -72,7 +77,8 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
     const { title, subItems, isFocused } = this.props
 
     const subList = subItems
-      ? (<Container items={subItems} direction='vertical' type='subList' nesting='nested' shouldFocusFirstItem={this.state.shouldFocusSubContainer} />)
+      ? (<Container items={subItems} direction='vertical' type='subList' nesting='nested'
+                    shouldFocusFirstItem={this.state.shouldOpenSubContainer} />)
       : (<></>)
 
     return (
@@ -116,13 +122,13 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
   }
 
   private enter() {
-    if (!this.props.isFocused) {
+    if (!this.props.isFocused || !this.props.subItems) {
       return
     }
 
-    this.setState({shouldFocusSubContainer: true})
+    this.setState({shouldOpenSubContainer: true})
 
-    this.props.onEnter(this.state)
+    this.props.onEnter()
   }
 
   private space() {
@@ -138,7 +144,8 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
       return
     }
 
-    this.props.onEsc()
+    this.setState({shouldOpenSubContainer: false})
+    this.props.onEsc(this.props.idx)
   }
 
   private onKeyDown(e: KeyboardEvent): void {
@@ -155,7 +162,7 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
 
       case LEFT_ARROW:
         console.log('Left Arrow Key Pressed')
-        if (this.props.parentDirection === 'vertical') {
+        if (this.props.parentContainerDirection === 'vertical') {
           break
         }
         this.movePrevious()
@@ -163,7 +170,7 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
 
       case RIGHT_ARROW:
         console.log('Right Arrow Key Pressed')
-        if (this.props.parentDirection === 'vertical') {
+        if (this.props.parentContainerDirection === 'vertical') {
           break
         }
         this.moveNext()
@@ -171,7 +178,7 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
 
       case UP_ARROW:
         console.log('Up Arrow Key Pressed')
-        if (this.props.parentDirection === 'horizontal') {
+        if (this.props.parentContainerDirection === 'horizontal') {
           break
         }
         this.movePrevious()
@@ -179,7 +186,7 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
 
       case DOWN_ARROW:
         console.log('Down Arrow Key Pressed')
-        if (this.props.parentDirection === 'horizontal') {
+        if (this.props.parentContainerDirection === 'horizontal') {
           break
         }
         this.moveNext()
@@ -202,7 +209,7 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
     }
 
     // TODO: make this correct
-    if (e.keyCode !== 9) {
+    if (e.keyCode !== TAB && e.keyCode !== ESC) {
       e.preventDefault()
       e.stopPropagation()
     }
@@ -210,19 +217,21 @@ class AtomicItem<TParent> extends React.Component<IAtomicItemProps<TParent>, IAt
 }
 
 class Container extends React.Component<IContainerProps, IContainerState> {
-  private parentRef = React.createRef<HTMLUListElement>()
-
   constructor(props: IContainerProps, state: IContainerState) {
     super(props, state)
 
     this.state = {
-      activeItemIdx: this.props.nesting === 'root' ? 0 : -1
+      focusItemOnIdx: this.props.shouldFocusFirstItem ? 0 : -1
     }
   }
 
   componentWillReceiveProps(nextProps: IContainerProps): void {
-    if (!this.props.shouldFocusFirstItem && nextProps.shouldFocusFirstItem === true) {
-      this.setState({ activeItemIdx: 0 })
+    if (!this.props.shouldFocusFirstItem && nextProps.shouldFocusFirstItem) {
+      this.setState({ focusItemOnIdx: 0 })
+    }
+
+    if (this.props.shouldFocusFirstItem && !nextProps.shouldFocusFirstItem) {
+      this.setState({ focusItemOnIdx: -1 })
     }
   }
 
@@ -233,13 +242,13 @@ class Container extends React.Component<IContainerProps, IContainerState> {
 
     if (nesting === 'root') {
       return (
-        <ul className={`${type} ${direction}`} ref={this.parentRef} data-top-level>
+        <ul className={`${type} ${direction}`} data-top-level>
           {itemsToRender}
         </ul>
       )
     } else {
       return (
-        <ul ref={this.parentRef} data-sub-list>
+        <ul data-sub-list>
           {itemsToRender}
         </ul>
       )
@@ -248,14 +257,20 @@ class Container extends React.Component<IContainerProps, IContainerState> {
 
   private buildItems(items: IItemProps[]) {
     return items.map((item, idx) => {
+      let isFocused = idx === this.state.focusItemOnIdx
+      if (this.state.focusItemOnIdx === -1) {
+        isFocused = false
+      }
+
+      console.log(`idx: ${idx}, isFocused: ${isFocused}`)
+
       return (
         <AtomicItem key={idx} title={item.title} subItems={item.subItems}
-          parentRef={this.parentRef}
-          parentDirection={this.props.direction}
+          parentContainerDirection={this.props.direction}
 
           idx={idx}
 
-          isFocused={(idx === this.state.activeItemIdx)}
+          isFocused={isFocused}
           isFirstElement={idx === 0}
           isLastElement={idx === items.length - 1}
 
@@ -272,27 +287,35 @@ class Container extends React.Component<IContainerProps, IContainerState> {
   }
 
   private movePrevious(): void {
-    this.setState({activeItemIdx: this.state.activeItemIdx - 1})
+    this.setState({
+      focusItemOnIdx: this.state.focusItemOnIdx - 1
+    })
 
-    console.log('movePrevious() - active index changed: ' + this.state.activeItemIdx)
+    console.log('movePrevious() - active index changed: ' + this.state.focusItemOnIdx)
   }
 
   private moveNext(): void {
-    this.setState({activeItemIdx: this.state.activeItemIdx + 1})
+    this.setState({
+      focusItemOnIdx: this.state.focusItemOnIdx + 1
+    })
 
-    console.log('moveNext() - active index changed: ' + this.state.activeItemIdx)
+    console.log('moveNext() - active index changed: ' + this.state.focusItemOnIdx)
   }
 
   private moveFirst(): void {
-    this.setState({activeItemIdx: 0})
+    this.setState({
+      focusItemOnIdx: 0
+    })
 
-    console.log('moveFirst() - active index changed: ' + this.state.activeItemIdx)
+    console.log('moveFirst() - active index changed: ' + this.state.focusItemOnIdx)
   }
 
   private moveLast(): void {
-    this.setState({activeItemIdx: this.props.items.length - 1})
+    this.setState({
+      focusItemOnIdx: this.props.items.length - 1
+    })
 
-    console.log('moveLast() - active index changed: ' + this.state.activeItemIdx)
+    console.log('moveLast() - active index changed: ' + this.state.focusItemOnIdx)
   }
 
   private enter(): void {
@@ -303,9 +326,11 @@ class Container extends React.Component<IContainerProps, IContainerState> {
     console.log('space()')
   }
 
-  private esc(): void {
-    this.parentRef.current!.focus()
-
+  private esc(idx: number): void {
+    // this.setState({
+    //   focusItemOnIdx: idx
+    // })
+    // // this.forceUpdate()
     console.log('esc()')
   }
 }
@@ -322,7 +347,7 @@ export class AccessibleList extends React.Component<IAccListProps> {
   render() {
     const { items, direction } = this.props
 
-    return (<Container type='list' items={items} direction={direction} nesting='root' />)
+    return (<Container type='list' items={items} direction={direction} nesting='root' shouldFocusFirstItem={true} />)
   }
 }
 
@@ -339,7 +364,7 @@ export class AccessibleMenu extends React.Component<IAccMenuProps> {
   render() {
     const { items, direction } = this.props
 
-    return (<Container type='menu' items={items} direction={direction} nesting='root' />)
+    return (<Container type='menu' items={items} direction={direction} nesting='root' shouldFocusFirstItem={true} />)
   }
 }
 
@@ -355,6 +380,6 @@ export class AccessibleTree extends React.Component<IAccTreeProps> {
   render() {
     const { items } = this.props
 
-    return (<Container type='tree' items={items} direction='vertical' nesting='root' />)
+    return (<Container type='tree' items={items} direction='vertical' nesting='root' shouldFocusFirstItem={true} />)
   }
 }
