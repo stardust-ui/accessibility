@@ -29,7 +29,7 @@ Following combinations of clients and screen readers is supported/required:
 - Windows/Chrome - JAWS
 - Windows/Edge - Narrator
 - Windows/Firefox - NVDA
-- Windows/Chrome - VoiceOver
+- macOS/Chrome - VoiceOver
 
 
 ## Contrast
