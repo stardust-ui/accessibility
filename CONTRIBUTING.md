@@ -7,7 +7,7 @@ In general, components need to conform to the [WAI-ARIA Authoring Practices](htt
 # Components and Behaviors
 There are two areas that come together to achieve accessibility:
 * Components - implemented for each supported framwork (currently React), when rendered, need to be [semantically correct](https://en.wikipedia.org/wiki/Semantic_HTML)
-* Behaviors - framework independent, intended to add ARIA roles, ARIA attributes and keyboard handling on top of the components. In the future, behaviors development will move from the [Stardust react](https://github.com/stardust-ui/react) repo to [Stardust accessibility](https://github.com/stardust-ui/accessibility) repo.
+* Behaviors - framework independent, intended to add ARIA roles, ARIA attributes and keyboard handling on top of the components based on their type and state. In the future, behaviors development will move from the [Stardust react](https://github.com/stardust-ui/react) repo to [Stardust accessibility](https://github.com/stardust-ui/accessibility) repo.
 
 # Accessibility requirements
 
