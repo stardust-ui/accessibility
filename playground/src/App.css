@@ -133,18 +133,18 @@ ul {
   content: " ▾";
 }
 
-.menu ul[data-should-focus-first-item="false"] {
+.menu ul[data-should-open="false"] {
   display: none;
 }
 
 /**
   Tree
 */
-.tree li[data-has-sub-list="true"][data-is-sub-list-focused="true"]::before {
+.tree li[data-has-sub-list="true"][data-is-sub-list-open="true"]::before {
   content: " ▾";
 }
 
-.tree li[data-has-sub-list="true"][data-is-sub-list-focused="false"]::before {
+.tree li[data-has-sub-list="true"][data-is-sub-list-open="false"]::before {
   content: " ▸";
 }
 

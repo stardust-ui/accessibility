@@ -41,7 +41,7 @@ interface IAtomicItemProps extends IItemProps {
 
 interface IAtomicItemState {
   shouldSubContainerBeFocused: boolean
-  shouldSubContainerBeOpened: boolean
+  shouldSubContainerBeOpen: boolean
   isLastOpened: boolean
 }
 
@@ -67,7 +67,7 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
 
     this.state = {
       shouldSubContainerBeFocused: false,
-      shouldSubContainerBeOpened: false,
+      shouldSubContainerBeOpen: false,
       isLastOpened: false
     }
   }
@@ -85,44 +85,46 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
 
     const subList = subItems
       ? (<Container items={subItems} direction='vertical' type={type} nesting='nested'
-                    shouldOpen={this.state.shouldSubContainerBeOpened}
+                    shouldOpen={this.state.shouldSubContainerBeOpen}
                     shouldFocusFirstItem={this.state.shouldSubContainerBeFocused} />)
       : (<></>)
 
     return (
-      <li tabIndex={isFocused ? 0 : -1} onKeyDown={this.onKeyDown.bind(this)} ref={this.itemRef} data-has-sub-list={subItems ? true : false} data-is-sub-list-focused={this.state.shouldSubContainerBeOpened}>
+      <li tabIndex={isFocused ? 0 : -1} onKeyDown={this.onKeyDown.bind(this)} ref={this.itemRef} data-has-sub-list={subItems ? true : false} data-is-sub-list-open={this.state.shouldSubContainerBeOpen}>
         {title}
         {subList}
       </li>
     )
   }
 
+  // returns true if event was handled and should not propagate
   private movePrevious() {
     if (this.props.type === 'tree') {
-      if (this.state.shouldSubContainerBeFocused && this.state.shouldSubContainerBeOpened) {
+      if (this.state.shouldSubContainerBeFocused && this.state.shouldSubContainerBeOpen) {
         this.setState({shouldSubContainerBeFocused: false})
         return true
       }
     }
 
     if (this.props.isFirstElement || !this.props.isFocused) {
-      return false
+      return this.props.type !== 'tree'
     }
 
     this.props.onMovePrevious()
     return true
   }
 
+  // returns true if event was handled and should not propagate
   private moveNext() {
     if (this.props.type === 'tree') {
-      if (this.state.shouldSubContainerBeOpened && !this.state.shouldSubContainerBeFocused) {
+      if (this.state.shouldSubContainerBeOpen && !this.state.shouldSubContainerBeFocused) {
         this.setState({shouldSubContainerBeFocused: true})
         return true
       }
     }
 
     if (this.props.isLastElement || !this.props.isFocused) {
-      return false
+      return this.props.type !== 'tree'
     }
 
     this.props.onMoveNext()
@@ -155,7 +157,7 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
     }
 
     this.setState({
-      shouldSubContainerBeOpened: true,
+      shouldSubContainerBeOpen: true,
       shouldSubContainerBeFocused: this.props.type !== 'tree',
       isLastOpened: true
     })
@@ -179,7 +181,7 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
     console.warn(`isLastOpened ${this.state.isLastOpened}`)
 
     this.setState({
-      shouldSubContainerBeOpened: false,
+      shouldSubContainerBeOpen: false,
       shouldSubContainerBeFocused: false,
     })
     this.props.onEsc()
@@ -206,9 +208,9 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
               this.setState({shouldSubContainerBeFocused: false})
               break
             }
-            if (this.state.shouldSubContainerBeOpened) {
+            if (this.state.shouldSubContainerBeOpen) {
               // subcontainer is unfocused but open, so we can close it directly
-              this.setState({shouldSubContainerBeFocused: false, shouldSubContainerBeOpened: false})
+              this.setState({shouldSubContainerBeFocused: false, shouldSubContainerBeOpen: false})
               break
             }
           }
@@ -225,10 +227,10 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
       case RIGHT_ARROW:
         console.log('Right Arrow Key Pressed')
         if (this.props.type === 'tree' && this.props.subItems) {
-          if (this.state.shouldSubContainerBeOpened && !this.state.shouldSubContainerBeFocused) {
+          if (this.state.shouldSubContainerBeOpen && !this.state.shouldSubContainerBeFocused) {
             this.setState({shouldSubContainerBeFocused: true})
           }
-          this.setState({shouldSubContainerBeOpened: true})
+          this.setState({shouldSubContainerBeOpen: true})
           break
         }
         if (this.props.parentContainerDirection === 'vertical') {
@@ -238,22 +240,22 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
         break
 
       case UP_ARROW:
-        console.log('Up Arrow Key Pressed', this.props.title)
+        console.log('Up Arrow Key Pressed')
         if (this.props.parentContainerDirection === 'horizontal') {
           break
         }
-        if (!this.movePrevious() && this.props.type === 'tree') {
+        if (!this.movePrevious()) {
           e.preventDefault()
           return
         }
         break
 
       case DOWN_ARROW:
-        console.log('Down Arrow Key Pressed', this.props.title)
+        console.log('Down Arrow Key Pressed')
         if (this.props.parentContainerDirection === 'horizontal') {
           break
         }
-        if (!this.moveNext() && this.props.type === 'tree') {
+        if (!this.moveNext()) {
           e.preventDefault()
           return
         }
@@ -312,7 +314,7 @@ class Container extends React.Component<IContainerProps, IContainerState> {
   }
 
   render() {
-    const { direction, type, nesting, shouldFocusFirstItem, shouldOpen } = this.props
+    const { direction, type, nesting, shouldOpen } = this.props
 
     const itemsToRender = this.buildItems(this.props.items)
 
@@ -324,7 +326,7 @@ class Container extends React.Component<IContainerProps, IContainerState> {
       )
     } else {
       return (
-        <ul data-sub-list data-should-focus-first-item={shouldFocusFirstItem} data-should-open={shouldOpen}>
+        <ul data-sub-list data-should-open={shouldOpen}>
           {itemsToRender}
         </ul>
       )
