@@ -25,6 +25,8 @@ interface IAtomicItemProps extends IItemProps {
   idx: number
   isFocused: boolean
 
+  type: 'list' | 'menu' | 'tree' | 'dropdown' | 'subList'
+
   isFirstElement: boolean
   isLastElement: boolean
 
@@ -38,17 +40,19 @@ interface IAtomicItemProps extends IItemProps {
 }
 
 interface IAtomicItemState {
-  shouldSubContainerBeOpened: boolean
+  shouldSubContainerBeFocused: boolean
+  shouldSubContainerBeOpen: boolean
   isLastOpened: boolean
 }
 
 interface IContainerProps {
   items: IItemProps[]
   direction: Direction
-  type: 'list' | 'menu' | 'tree' | 'subList'
+  type: 'list' | 'menu' | 'tree' | 'dropdown' | 'subList'
   nesting: 'root' | 'nested'
 
   shouldFocusFirstItem: boolean
+  shouldOpen: boolean
 }
 
 interface IContainerState {
@@ -62,47 +66,75 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
     super(props, state)
 
     this.state = {
-      shouldSubContainerBeOpened: false,
+      shouldSubContainerBeFocused: false,
+      shouldSubContainerBeOpen: false,
       isLastOpened: false
     }
   }
 
   componentDidUpdate() {
-    if (this.props.isFocused && !this.state.shouldSubContainerBeOpened) {
+    console.log('did update', this.props.title)
+    if (this.props.isFocused && !this.state.shouldSubContainerBeFocused) {
+      console.log('focusing', this.props.title)
       this.itemRef.current!.focus()
     }
   }
 
   render() {
-    const { title, subItems, isFocused } = this.props
+    const { title, subItems, isFocused, type } = this.props
 
     const subList = subItems
-      ? (<Container items={subItems} direction='vertical' type='subList' nesting='nested'
-                    shouldFocusFirstItem={this.state.shouldSubContainerBeOpened} />)
+      ? (<Container items={subItems} direction='vertical' nesting='nested'
+                    type={type === 'dropdown' ? 'subList' : type}
+                    shouldOpen={this.state.shouldSubContainerBeOpen}
+                    shouldFocusFirstItem={this.state.shouldSubContainerBeFocused} />)
       : (<></>)
 
+    const ElementType = type === 'dropdown' ? 'div' : 'li'
+    const content = type === 'dropdown' ?
+      (<span>&bull;&bull;&bull;</span>) :
+      title
+
     return (
-      <li tabIndex={isFocused ? 0 : -1} onKeyDown={this.onKeyDown.bind(this)} ref={this.itemRef} data-has-sub-list={subItems ? true : false}>
-        {title}
+      <ElementType className={type === 'dropdown' ? 'menu vertical' : ''} tabIndex={isFocused ? 0 : -1} onKeyDown={this.onKeyDown.bind(this)} ref={this.itemRef} data-has-sub-list={subItems ? true : false} data-is-sub-list-open={this.state.shouldSubContainerBeOpen}>
+        {content}
         {subList}
-      </li>
+      </ElementType>
     )
   }
 
+  // returns true if event was handled and should not propagate
   private movePrevious() {
+    if (this.props.type === 'tree') {
+      if (this.state.shouldSubContainerBeFocused && this.state.shouldSubContainerBeOpen) {
+        this.setState({shouldSubContainerBeFocused: false})
+        return true
+      }
+    }
+
     if (this.props.isFirstElement || !this.props.isFocused) {
-      return
+      return this.props.type !== 'tree'
     }
 
     this.props.onMovePrevious()
+    return true
   }
 
+  // returns true if event was handled and should not propagate
   private moveNext() {
+    if (this.props.type === 'tree') {
+      if (this.state.shouldSubContainerBeOpen && !this.state.shouldSubContainerBeFocused) {
+        this.setState({shouldSubContainerBeFocused: true})
+        return true
+      }
+    }
+
     if (this.props.isLastElement || !this.props.isFocused) {
-      return
+      return this.props.type !== 'tree'
     }
 
     this.props.onMoveNext()
+    return true
   }
 
   private moveFirst() {
@@ -131,7 +163,8 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
     }
 
     this.setState({
-      shouldSubContainerBeOpened: true,
+      shouldSubContainerBeOpen: true,
+      shouldSubContainerBeFocused: this.props.type !== 'tree',
       isLastOpened: true
     })
 
@@ -153,7 +186,10 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
 
     console.warn(`isLastOpened ${this.state.isLastOpened}`)
 
-    this.setState({shouldSubContainerBeOpened: false})
+    this.setState({
+      shouldSubContainerBeOpen: false,
+      shouldSubContainerBeFocused: false,
+    })
     this.props.onEsc()
   }
 
@@ -171,6 +207,23 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
 
       case LEFT_ARROW:
         console.log('Left Arrow Key Pressed')
+        if (this.props.type === 'tree') {
+          if (this.props.subItems) {
+            if (this.state.shouldSubContainerBeFocused) {
+              // subcontainer is focused, so unfocus it, but do not close it yet
+              this.setState({shouldSubContainerBeFocused: false})
+              break
+            }
+            if (this.state.shouldSubContainerBeOpen) {
+              // subcontainer is unfocused but open, so we can close it directly
+              this.setState({shouldSubContainerBeFocused: false, shouldSubContainerBeOpen: false})
+              break
+            }
+          }
+          e.preventDefault()
+          // do not stop propagation so a parent item can handle it
+          return
+        }
         if (this.props.parentContainerDirection === 'vertical') {
           break
         }
@@ -179,6 +232,13 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
 
       case RIGHT_ARROW:
         console.log('Right Arrow Key Pressed')
+        if (this.props.type === 'tree' && this.props.subItems) {
+          if (this.state.shouldSubContainerBeOpen && !this.state.shouldSubContainerBeFocused) {
+            this.setState({shouldSubContainerBeFocused: true})
+          }
+          this.setState({shouldSubContainerBeOpen: true})
+          break
+        }
         if (this.props.parentContainerDirection === 'vertical') {
           break
         }
@@ -190,7 +250,10 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
         if (this.props.parentContainerDirection === 'horizontal') {
           break
         }
-        this.movePrevious()
+        if (!this.movePrevious()) {
+          e.preventDefault()
+          return
+        }
         break
 
       case DOWN_ARROW:
@@ -198,7 +261,10 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
         if (this.props.parentContainerDirection === 'horizontal') {
           break
         }
-        this.moveNext()
+        if (!this.moveNext()) {
+          e.preventDefault()
+          return
+        }
         break
 
       case ENTER:
@@ -213,7 +279,9 @@ class AtomicItem extends React.Component<IAtomicItemProps, IAtomicItemState> {
 
       case ESC:
         console.log('ESC Key Pressed')
-
+        if (this.props.type === 'tree') {
+          break
+        }
         console.error(`isLastOpened ${this.state.isLastOpened}`)
         this.esc()
         if (this.state.isLastOpened === true) {
@@ -252,7 +320,31 @@ class Container extends React.Component<IContainerProps, IContainerState> {
   }
 
   render() {
-    const { direction, type, nesting } = this.props
+    const { direction, type, nesting, shouldOpen } = this.props
+
+    if (type === 'dropdown') {
+      return (
+        <AtomicItem key={0} title={''} subItems={this.props.items}
+          parentContainerDirection={this.props.direction}
+
+          idx={0}
+
+          isFocused={true}
+          isFirstElement={true}
+          isLastElement={true}
+
+          type={type}
+
+          onMovePrevious={this.movePrevious.bind(this)}
+          onMoveNext={this.moveNext.bind(this)}
+          onMoveFirst={this.moveFirst.bind(this)}
+          onMoveLast={this.moveLast.bind(this)}
+          onEnter={this.enter.bind(this)}
+          onSpace={this.space.bind(this)}
+          onEsc={this.esc.bind(this)}
+          />
+      )
+    }
 
     const itemsToRender = this.buildItems(this.props.items)
 
@@ -264,7 +356,7 @@ class Container extends React.Component<IContainerProps, IContainerState> {
       )
     } else {
       return (
-        <ul data-sub-list>
+        <ul data-sub-list data-should-open={shouldOpen}>
           {itemsToRender}
         </ul>
       )
@@ -284,6 +376,8 @@ class Container extends React.Component<IContainerProps, IContainerState> {
           isFocused={isFocused}
           isFirstElement={idx === 0}
           isLastElement={idx === items.length - 1}
+
+          type={this.props.type}
 
           onMovePrevious={this.movePrevious.bind(this)}
           onMoveNext={this.moveNext.bind(this)}
@@ -354,7 +448,7 @@ export class AccessibleList extends React.Component<IAccListProps> {
   render() {
     const { items, direction } = this.props
 
-    return (<Container type='list' items={items} direction={direction} nesting='root' shouldFocusFirstItem={true} />)
+    return (<Container type='list' items={items} direction={direction} nesting='root' shouldOpen={true} shouldFocusFirstItem={true} />)
   }
 }
 
@@ -371,7 +465,7 @@ export class AccessibleMenu extends React.Component<IAccMenuProps> {
   render() {
     const { items, direction } = this.props
 
-    return (<Container type='menu' items={items} direction={direction} nesting='root' shouldFocusFirstItem={true} />)
+    return (<Container type='menu' items={items} direction={direction} nesting='root' shouldOpen={true} shouldFocusFirstItem={true} />)
   }
 }
 
@@ -387,6 +481,23 @@ export class AccessibleTree extends React.Component<IAccTreeProps> {
   render() {
     const { items } = this.props
 
-    return (<Container type='tree' items={items} direction='vertical' nesting='root' shouldFocusFirstItem={true} />)
+    return (<Container type='tree' items={items} direction='vertical' nesting='root' shouldOpen={true} shouldFocusFirstItem={true} />)
   }
 }
+
+
+/** -------------------------------------------------------
+ *                  Accessible Dropdown
+ ** -------------------------------------------------------*/
+
+ export interface IAccDropdownProps {
+   items: IItemProps[]
+ }
+
+ export class AccessibleDropdown extends React.Component<IAccDropdownProps> {
+   render() {
+     const { items } = this.props
+
+     return (<Container type='dropdown' items={items} direction='vertical' nesting='root' shouldOpen={false} shouldFocusFirstItem={true} />)
+   }
+ }

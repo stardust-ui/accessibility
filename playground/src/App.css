@@ -94,6 +94,7 @@ ul {
 .menu, .menu ul,
 .tree, .tree ul {
   border: 1px solid gray;
+  display: block;
 }
 
 .horizontal {
@@ -104,4 +105,49 @@ ul {
 .horizontal li {
   padding: 0 10px;
   margin: 6px;
+}
+
+/**
+  Nesting
+*/
+.menu ul[data-top-level="true"] {
+  position: relative;
+}
+
+.menu ul[data-sub-list="true"] {
+  position: absolute;
+  background-color: white;
+  z-index: 999;
+}
+
+.menu li {
+  white-space: nowrap;
+}
+
+.menu.vertical li[data-has-sub-list="true"]::after,
+.menu.horizontal > li li[data-has-sub-list="true"]::after {
+  content: " ▸";
+}
+
+.menu.horizontal li[data-has-sub-list="true"]::after {
+  content: " ▾";
+}
+
+.menu ul[data-should-open="false"] {
+  display: none;
+}
+
+/**
+  Tree
+*/
+.tree li[data-has-sub-list="true"][data-is-sub-list-open="true"]::before {
+  content: " ▾";
+}
+
+.tree li[data-has-sub-list="true"][data-is-sub-list-open="false"]::before {
+  content: " ▸";
+}
+
+.tree ul[data-should-open="false"] {
+  display: none;
 }

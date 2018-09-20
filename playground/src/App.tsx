@@ -1,7 +1,7 @@
 import * as React from 'react';
 import './App.css';
 import { List, Menu, MenuEx, IListProps, TreeEx } from "./components/components";
-import { AccessibleList, AccessibleMenu, AccessibleTree } from './components/universal-components';
+import { AccessibleList, AccessibleMenu, AccessibleTree, AccessibleDropdown } from './components/universal-components';
 
 class App extends React.Component {
   public render() {
@@ -140,6 +140,19 @@ class App extends React.Component {
 
     return (
       <>
+        <h1>Accessible Dropdown Example</h1>
+        <div>
+          Simple dropdown:&nbsp;<AccessibleDropdown items={listItems1} />
+        </div>
+        <br />
+        <div>
+          Nested dropdown:&nbsp;<AccessibleDropdown items={listItemsNested1} />
+        </div>
+        <br />
+        <div>
+          Few level nesting dropdown:&nbsp;<AccessibleDropdown items={listItemsNested2} />
+        </div>
+
         <h1>Accessible List Example</h1>
         <div>
           <AccessibleList items={listItems1} direction='vertical' />
