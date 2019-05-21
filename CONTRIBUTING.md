@@ -19,8 +19,8 @@ There are two areas that come together to achieve accessibility:
 - In RTL mode, left arrow key moves the focus to the next focusable element, right arrow key moves the focus to the previous focusable element within the focus zone.
 
 ## Focus
-- Whenever possible, focus should land only on elements that have concrete implicit or explicit ARIA role (button, menu item, ....)
-- Make sure the onClick event handlers are on focusable elements with implicit or explicit ARIA role
+- Whenever possible, focus should land only on elements that have concrete implicit or explicit ARIA role (`<button />`, `role='button'`, `role='menuitem'`, ....)
+- Make sure the onClick event handlers are handled on focusable elements with implicit or explicit ARIA role and not on their parent/child elements
 
 ## Screen readers
 User needs to be able to interact with the application using:
