@@ -21,6 +21,7 @@ There are two areas that come together to achieve accessibility:
 ## Focus
 - Whenever possible, focus should land only on elements that have concrete implicit or explicit ARIA role (`<button />`, `role='button'`, `role='menuitem'`, ....)
 - Make sure the onClick event handlers are handled on focusable elements with implicit or explicit ARIA role and not on their parent/child elements
+- Be careful when reacting on focus or on hover - screen readers do not have concept of hovering and not always focus elements, so there needs to be another way for the screen reader users to interact with such elements. For example showing popups on focus or on hover needs to be justified 
 
 ## Screen readers
 User needs to be able to interact with the application using:
