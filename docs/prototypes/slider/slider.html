@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<head>
+<style>
+* {
+    box-sizing: border-box;
+}
+
+.slider {
+    height: 30px;
+    margin: 10px;
+    position: relative;
+    width: 300px;
+}
+
+.slider_vertical {
+    height: 300px;
+    width: 30px;
+}
+
+.slider input[type=range] {
+    -webkit-appearance: none;
+    height: 30px;;
+    margin: 0;
+    padding: 0;
+    width: 300px;
+}
+
+.slider input[type=range]:focus {
+    outline: none;
+}
+
+.slider input[type=range][aria-orientation=vertical] {
+    transform: rotate(-90deg);
+    transform-origin: 150px 150px;
+}
+
+.slider input[type=range]::-webkit-slider-runnable-track {
+    background: #aaa;
+    border: 1px solid #777;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 6px;
+}
+.slider input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc
+}
+.slider input[type=range]::-moz-range-track {
+    background: #aaa;
+    border: 1px solid #777;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 4px;
+}
+.slider input[type=range]:focus::-moz-range-track {
+    background: #ccc
+}
+.slider input[type=range]::-ms-track {
+    background: #aaa;
+    border: 1px solid #777;
+    border-radius: 4px;
+    cursor: pointer;
+    height: 6px;
+}
+.slider input[type=range]:focus::-ms-track {
+    background: #ccc
+}
+.slider input[type=range]::-ms-fill-lower {
+    display: none;
+}
+.slider input[type=range]::-ms-fill-upper {
+    display: none;
+}
+
+.slider input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #ddd;
+    border: 1px solid #777;
+    border-radius: 100%;
+    cursor: pointer;
+    height: 20px;
+    margin-top: -8px;
+    width: 20px;
+}
+.slider input[type=range]:focus::-webkit-slider-thumb {
+    background: #eee;
+    outline: auto;
+}
+.slider input[type=range]::-moz-range-thumb {
+    background: #ddd;
+    border: 1px solid #777;
+    border-radius: 100%;
+    cursor: pointer;
+    height: 20px;
+    margin-top: -8px;
+    width: 20px;
+}
+.slider input[type=range]:focus::-moz-range-thumb {
+    background: #eee;
+}
+.slider input[type=range]::-ms-thumb {
+    background: #ddd;
+    border: 1px solid #777;
+    border-radius: 100%;
+    cursor: pointer;
+    height: 20px;
+    margin-top: 0;
+    width: 20px;
+}
+.slider input[type=range]:focus::-ms-thumb {
+    background: #eee;
+}
+</style>
+
+<script>
+
+function Slider(input/*: HTMLInputElement */, props/*: { min: number, max: number, value: number, label: string, valueText: (value: number) => string, step: number, onChange: (value: number) => void, isVertical: boolean } */) {
+    input.setAttribute('type', 'range');
+    input.setAttribute('min', props.min);
+    input.setAttribute('max', props.max);
+    if (props.step) {
+        input.setAttribute('step', props.step);
+    }
+    input.setAttribute('value', props.value);
+    input.setAttribute('aria-valuemin', props.min);
+    input.setAttribute('aria-valuemax', props.max);
+    input.setAttribute('aria-valuenow', props.value);
+    input.setAttribute('aria-valuetext', props.valueText(props.value));
+    input.setAttribute('aria-label', props.label);
+
+    if (props.isVertical) {
+        input.setAttribute('aria-orientation', 'vertical');
+    }
+
+    input.addEventListener('change', function(e) {
+        var value = input.value;
+
+        input.setAttribute('value', value);
+        input.setAttribute('aria-valuenow', value);
+        input.setAttribute('aria-valuetext', props.valueText(value));
+
+        if (props.onChange) {
+            props.onChange(value);
+        }
+    });
+}
+
+function init() {
+    new Slider(document.getElementById('slider'), {
+        min: 1,
+        max: 100,
+        value: 56,
+        label: 'Pretty slider',
+        valueText: function(value) {
+            return 'Slider value = ' + value;
+        },
+        step: 0.5,
+        onChange: function(value) {
+            console.error('New slider value:', value);
+        }
+    });
+
+    new Slider(document.getElementById('slider2'), {
+        min: 0,
+        max: 50,
+        value: 10,
+        label: 'Pretty vertical slider',
+        valueText: function(value) {
+            return 'Vertical slider value = ' + value;
+        },
+        step: 5,
+        onChange: function(value) {
+            console.error('New vertical slider value:', value);
+        },
+        isVertical: true
+    });
+}
+
+</script>
+</head>
+<body onload="init()">
+    <h1>Slider</h1>
+    <div role="none" class="slider">
+        <input id="slider" type="range">
+    </div>
+    <div role="none" class="slider slider_vertical">
+        <input id="slider2" type="range">
+    </div>
+</body>
+</html>
